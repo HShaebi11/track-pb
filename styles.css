@@ -646,7 +646,265 @@ html, body {
   100% { opacity: 1; }
 }
 
-/* 15. UTILITY CLASSES */
+/* 15. PB DASHBOARD STYLES */
+
+/* DASHBOARD CONTROLS */
+.dashboard-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: calc(var(--unit) * 4);
+  padding-bottom: calc(var(--unit) * 2);
+  border-bottom: 1px solid var(--grey-grid); /* Editorial hairline divider */
+}
+
+.view-toggle {
+  display: flex;
+  gap: calc(var(--unit) * 1);
+}
+
+.btn-add {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: calc(var(--unit) * 2) calc(var(--unit) * 4);
+  border: 1px solid var(--black);
+  border-radius: 2px;
+  background: var(--black);
+  color: var(--white);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.btn-add:hover {
+  background: var(--white);
+  color: var(--black);
+}
+
+/* PB CARDS GRID */
+.pb-dashboard {
+  margin-bottom: calc(var(--unit) * 6);
+}
+
+.pb-cards-grid {
+  display: grid;
+  gap: calc(var(--unit) * 6);
+}
+
+.pb-section {
+  border-bottom: 1px solid var(--grey-grid); /* Editorial hairline divider */
+  padding-bottom: calc(var(--unit) * 4);
+}
+
+.pb-section:last-child {
+  border-bottom: none;
+}
+
+.pb-section-title {
+  font-family: var(--font-editorial);
+  font-weight: 100; /* PP Editorial New Thin */
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-bottom: calc(var(--unit) * 3);
+  color: var(--black);
+}
+
+.pb-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: calc(var(--unit) * 3);
+}
+
+/* PB CARD - LARGE SERIF CARDS */
+.pb-card {
+  border: 1px solid var(--grey-grid);
+  padding: calc(var(--unit) * 4);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+  position: relative;
+}
+
+.pb-card:hover {
+  border-color: var(--black);
+}
+
+.pb-card.improved {
+  border-left: 3px solid var(--success); /* Subtle green side-border for improvements */
+}
+
+.pb-card-metric {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--black);
+  margin-bottom: calc(var(--unit) * 1);
+}
+
+.pb-card-value {
+  font-family: var(--font-editorial); /* Large serif for values */
+  font-weight: 100;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--black);
+  margin-bottom: calc(var(--unit) * 1);
+}
+
+.pb-card-change {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--black);
+}
+
+.pb-card-change.improvement {
+  color: var(--success);
+}
+
+.pb-card-change.decline {
+  color: var(--error);
+}
+
+/* EDITORIAL PILL BUTTONS */
+.editorial-pills {
+  display: flex;
+  gap: calc(var(--unit) * 2);
+  margin-bottom: calc(var(--unit) * 3);
+  border-bottom: 1px solid var(--grey-grid);
+  padding-bottom: calc(var(--unit) * 2);
+}
+
+.editorial-pill {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: calc(var(--unit) * 2) calc(var(--unit) * 4);
+  border: 1px solid var(--grey-grid);
+  border-radius: 999px; /* Pill shape */
+  background: var(--white);
+  color: var(--black);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.editorial-pill:hover {
+  border-color: var(--black);
+}
+
+.editorial-pill.active,
+.editorial-pill[aria-pressed="true"] {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+/* 4-WEEK REMINDER FLOATING BANNER */
+.reminder-banner {
+  position: fixed;
+  top: calc(var(--unit) * 3);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  background: var(--white);
+  border: 1px solid var(--black);
+  padding: calc(var(--unit) * 2) calc(var(--unit) * 4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: slide-in 300ms ease-out;
+}
+
+.reminder-content {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--unit) * 2);
+}
+
+.reminder-prefix {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.reminder-text {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+}
+
+.reminder-dismiss {
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: calc(var(--unit) * 1);
+  color: var(--black);
+}
+
+.reminder-dismiss:hover {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* CALENDAR PICKER STYLING */
+.calendar-picker {
+  position: relative;
+}
+
+.calendar-picker::-webkit-calendar-picker-indicator {
+  background: transparent;
+  cursor: pointer;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 900px) {
+  .pb-cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: calc(var(--unit) * 2);
+  }
+  
+  .dashboard-controls {
+    flex-direction: column;
+    gap: calc(var(--unit) * 2);
+  }
+  
+  .view-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .pb-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .editorial-pills {
+    flex-wrap: wrap;
+    gap: calc(var(--unit) * 1);
+  }
+  
+  .reminder-banner {
+    left: calc(var(--unit) * 2);
+    right: calc(var(--unit) * 2);
+    transform: none;
+  }
+}
+
+/* 16. UTILITY CLASSES */
 .sr-only {
   position: absolute;
   left: -9999px;

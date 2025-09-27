@@ -27,18 +27,122 @@
       <div class="alert-content">EXECUTE COMPREHENSIVE PB VALIDATION PROTOCOL</div>
     </div>
 
+    <!-- 4-WEEK REMINDER FLOATING BANNER -->
+    <div id="reminderBanner" class="reminder-banner" style="display:none;">
+      <div class="reminder-content">
+        <span class="reminder-prefix">⸻</span>
+        <span class="reminder-text">TIME TO RE-TEST YOUR PERSONAL BESTS (28 DAYS PASSED)</span>
+        <button id="dismissReminder" class="reminder-dismiss">×</button>
+      </div>
+    </div>
+
     <div id="recommendations" class="recommendations" style="display:none;">
       <div class="system-header">TRAINING RECOMMENDATIONS</div>
+    </div>
+
+    <!-- PB DASHBOARD CONTROLS -->
+    <div class="dashboard-controls">
+      <div class="view-toggle">
+        <button id="cardViewBtn" class="chip active" data-view="card">CARD VIEW</button>
+        <button id="tableViewBtn" class="chip" data-view="table">TABLE VIEW</button>
+      </div>
+      <button id="quickAddBtn" class="btn-add">⊕ QUICK ADD</button>
     </div>
 
     <!-- PRIMARY LEDGER GRID -->
     <section class="grid">
       
-      <!-- RUNNING PERFORMANCE MODULE -->
-      <div class="module col-6">
+      <!-- PB DASHBOARD - CARD VIEW -->
+      <div id="pbCardView" class="pb-dashboard col-12">
+        <div class="pb-cards-grid">
+          <!-- RUNNING CARDS -->
+          <div class="pb-section">
+            <h3 class="pb-section-title">RUNNING:</h3>
+            <div class="pb-cards">
+              <div class="pb-card" data-metric="5k">
+                <div class="pb-card-metric">5K</div>
+                <div class="pb-card-value" id="card-5k">--:--</div>
+                <div class="pb-card-change" id="card-change-5k"></div>
+              </div>
+              <div class="pb-card" data-metric="10k">
+                <div class="pb-card-metric">10K</div>
+                <div class="pb-card-value" id="card-10k">--:--</div>
+                <div class="pb-card-change" id="card-change-10k"></div>
+              </div>
+              <div class="pb-card" data-metric="hm">
+                <div class="pb-card-metric">HALF MARATHON</div>
+                <div class="pb-card-value" id="card-hm">--:--</div>
+                <div class="pb-card-change" id="card-change-hm"></div>
+              </div>
+              <div class="pb-card" data-metric="marathon">
+                <div class="pb-card-metric">MARATHON</div>
+                <div class="pb-card-value" id="card-marathon">--:--</div>
+                <div class="pb-card-change" id="card-change-marathon"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STRENGTH CARDS -->
+          <div class="pb-section">
+            <h3 class="pb-section-title">STRENGTH:</h3>
+            <div class="pb-cards">
+              <div class="pb-card" data-metric="pushups">
+                <div class="pb-card-metric">PUSH-UPS</div>
+                <div class="pb-card-value" id="card-pushups">-- REPS</div>
+                <div class="pb-card-change" id="card-change-pushups"></div>
+              </div>
+              <div class="pb-card" data-metric="pullups">
+                <div class="pb-card-metric">PULL-UPS</div>
+                <div class="pb-card-value" id="card-pullups">-- REPS</div>
+                <div class="pb-card-change" id="card-change-pullups"></div>
+              </div>
+              <div class="pb-card" data-metric="dbpress">
+                <div class="pb-card-metric">DB FLOOR PRESS</div>
+                <div class="pb-card-value" id="card-dbpress">-- PTS</div>
+                <div class="pb-card-change" id="card-change-dbpress"></div>
+              </div>
+              <div class="pb-card" data-metric="gobletsquat">
+                <div class="pb-card-metric">GOBLET SQUAT</div>
+                <div class="pb-card-value" id="card-gobletsquat">-- PTS</div>
+                <div class="pb-card-change" id="card-change-gobletsquat"></div>
+              </div>
+              <div class="pb-card" data-metric="dbrow">
+                <div class="pb-card-metric">DB ROW</div>
+                <div class="pb-card-value" id="card-dbrow">-- PTS</div>
+                <div class="pb-card-change" id="card-change-dbrow"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BODY COMPOSITION CARDS -->
+          <div class="pb-section">
+            <h3 class="pb-section-title">BODY COMPOSITION:</h3>
+            <div class="pb-cards">
+              <div class="pb-card" data-metric="weight">
+                <div class="pb-card-metric">WEIGHT</div>
+                <div class="pb-card-value" id="card-weight">-- KG</div>
+                <div class="pb-card-change" id="card-change-weight"></div>
+              </div>
+              <div class="pb-card" data-metric="bf">
+                <div class="pb-card-metric">BODY FAT</div>
+                <div class="pb-card-value" id="card-bf">-- %</div>
+                <div class="pb-card-change" id="card-change-bf"></div>
+              </div>
+              <div class="pb-card" data-metric="lean">
+                <div class="pb-card-metric">LEAN MASS</div>
+                <div class="pb-card-value" id="card-lean">-- KG</div>
+                <div class="pb-card-change" id="card-change-lean"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PB DASHBOARD - TABLE VIEW -->
+      <div id="pbTableView" class="module col-12" style="display:none;">
         <div class="module-header">
-          <span>RUNNING</span>
-          <span class="module-badge">TIME DECREASING</span>
+          <span>PERSONAL BESTS</span>
+          <span class="module-badge">COMPREHENSIVE LOG</span>
         </div>
         
         <table class="ledger">
@@ -187,11 +291,11 @@
           <span class="module-badge">SAVE DAILY // PB AUTO-UPDATE</span>
         </div>
 
-        <!-- CATEGORY SELECTION -->
-        <div class="chips">
-          <button class="chip" data-cat="running" aria-pressed="true">RUNNING</button>
-          <button class="chip" data-cat="strength" aria-pressed="false">STRENGTH</button>
-          <button class="chip" data-cat="body" aria-pressed="false">BODY</button>
+        <!-- CATEGORY SELECTION - EDITORIAL PILL BUTTONS -->
+        <div class="editorial-pills">
+          <button class="editorial-pill active" data-cat="running" aria-pressed="true">RUNNING</button>
+          <button class="editorial-pill" data-cat="strength" aria-pressed="false">STRENGTH</button>
+          <button class="editorial-pill" data-cat="body" aria-pressed="false">BODY</button>
         </div>
 
         <form id="pb-form" class="form-grid">
@@ -402,6 +506,117 @@
       
       <div class="modal-footer">
         <button id="saveSettings" class="btn">SAVE CONFIG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK ADD MODAL -->
+  <div id="quickAddModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">⊕ QUICK ADD PB</h2>
+        <button id="closeQuickAdd" class="modal-close">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- CATEGORY SELECTION -->
+        <div class="editorial-pills mb-4">
+          <button class="editorial-pill active" data-cat="running" aria-pressed="true">RUNNING</button>
+          <button class="editorial-pill" data-cat="strength" aria-pressed="false">STRENGTH</button>
+          <button class="editorial-pill" data-cat="body" aria-pressed="false">BODY</button>
+        </div>
+
+        <form id="quickAddForm" class="form-grid">
+          <!-- RUNNING INPUT -->
+          <div id="quick-fields-running" class="form-section">
+            <div class="form-group">
+              <label class="form-label" for="quickRunDistance">DISTANCE</label>
+              <select id="quickRunDistance" class="form-select">
+                <option value="5k">5K</option>
+                <option value="10k">10K</option>
+                <option value="hm">HALF MARATHON</option>
+                <option value="marathon">MARATHON</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="quickRunTime">TIME (HH:MM:SS)</label>
+              <input id="quickRunTime" class="form-input" placeholder="00:25:30" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="quickRunDate">DATE</label>
+              <input type="date" id="quickRunDate" class="form-input calendar-picker" />
+            </div>
+          </div>
+
+          <!-- STRENGTH INPUT -->
+          <div id="quick-fields-strength" class="form-section" style="display:none">
+            <div class="form-group">
+              <label class="form-label" for="quickExName">EXERCISE</label>
+              <select id="quickExName" class="form-select">
+                <option value="pushups">PUSH-UPS (REPS)</option>
+                <option value="pullups">PULL-UPS (REPS)</option>
+                <option value="dbpress">DB FLOOR PRESS (KG × REPS)</option>
+                <option value="gobletsquat">GOBLET SQUAT (KG × REPS)</option>
+                <option value="dbrow">DB ROW (KG × REPS)</option>
+              </select>
+            </div>
+            
+            <div class="grid">
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="form-label" for="quickExWeight">WEIGHT (KG)</label>
+                  <input id="quickExWeight" class="form-input" type="number" step="0.5" placeholder="24" />
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="form-label" for="quickExReps">REPS</label>
+                  <input id="quickExReps" class="form-input" type="number" step="1" placeholder="12" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="quickExDate">DATE</label>
+              <input type="date" id="quickExDate" class="form-input calendar-picker" />
+            </div>
+          </div>
+
+          <!-- BODY INPUT -->
+          <div id="quick-fields-body" class="form-section" style="display:none">
+            <div class="grid">
+              <div class="col-4">
+                <div class="form-group">
+                  <label class="form-label" for="quickBodyWeight">WEIGHT (KG)</label>
+                  <input id="quickBodyWeight" class="form-input" type="number" step="0.1" placeholder="80.2" />
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <label class="form-label" for="quickBodyBF">BODY FAT (%)</label>
+                  <input id="quickBodyBF" class="form-input" type="number" step="0.1" placeholder="18.5" />
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <label class="form-label" for="quickBodyLean">LEAN MASS (KG)</label>
+                  <input id="quickBodyLean" class="form-input" type="number" step="0.1" placeholder="AUTO CALC" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="quickBodyDate">DATE</label>
+              <input type="date" id="quickBodyDate" class="form-input calendar-picker" />
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button id="saveQuickAdd" class="btn">SAVE PB</button>
       </div>
     </div>
   </div>

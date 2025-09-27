@@ -12,6 +12,13 @@ A comprehensive personal best tracking application designed with Antithesis Tool
 - **Body Composition**: Track weight, body fat percentage, and lean mass
 - **Historical Data**: Complete log of all entries with PB indicators
 
+### 🎯 **NEW: Enhanced PB Dashboard**
+- **Dual View Modes**: Toggle between Card View (large serif displays) and Table View (detailed logs)
+- **Editorial Cards**: Each PB displayed in beautiful typography with change indicators
+- **Subtle Improvement Markers**: Green side-borders for improved PBs (no heavy colors)
+- **Quick Add Modal**: ⊕ button launches streamlined PB entry form
+- **4-Week Reminder System**: Floating banner alerts when 28+ days since last PB test
+
 ### 🎯 **NEW: Estimations & Predictions**
 - **Race Time Estimations**: Automatically calculate equivalent race times across distances using proven formulas (based on Jack Daniels' VDOT)
 - **Strength Estimations**: Calculate 1RM estimates from your weighted exercises, progression suggestions for bodyweight exercises
@@ -26,11 +33,13 @@ A comprehensive personal best tracking application designed with Antithesis Tool
 
 ## 🚀 How to Use
 
-1. **First Time Setup**: Click the ⚙️ settings button to set up your profile and preferences
-2. **Log Workouts**: Use the form to enter your daily training data
-3. **Track Progress**: View your PBs with delta indicators showing improvement/decline
-4. **Get Insights**: See estimated race times and performance predictions
-5. **Follow Recommendations**: Use AI-generated training suggestions to improve
+1. **Choose Your View**: Toggle between Card View (editorial display) and Table View (detailed logs)
+2. **Quick Add PBs**: Click ⊕ QUICK ADD for streamlined PB entry with calendar picker
+3. **Track Progress**: Green side-borders automatically highlight improvements
+4. **Monitor Trends**: 28-day body composition trends and progression indicators
+5. **Get Insights**: See estimated race times and performance predictions
+6. **Follow Recommendations**: Use AI-generated training suggestions to improve
+7. **4-Week Reminders**: Floating banner alerts when it's time to retest PBs
 
 ## 🧮 **Estimation Algorithms**
 
@@ -73,19 +82,27 @@ Uses **Epley Formula** for 1RM: `1RM = weight × (1 + reps/30)`
 
 ## 📊 **Examples in Action**
 
-**ANTITHESIS DESIGN IN ACTION:**
+**ANTITHESIS PB TRACKER IN ACTION:**
 ```
-┌─ RUNNING MODULE ─────────────────────────────────┐
-│ DISTANCE     │ CURRENT PB │ DELTA    │ ESTIMATE │
-├──────────────┼────────────┼──────────┼──────────┤
-│ 5K           │ 22:30      │ ↓ 0:15   │ ~BASE    │
-│ 10K          │ --:--      │ —        │ ~46:50   │
-│ HALF MARA... │ --:--      │ —        │ ~1:42:15 │
-└──────────────┴────────────┴──────────┴──────────┘
+┌─ CARD VIEW ──────────────────────────────────────┐
+│  [CARD VIEW] [TABLE VIEW]           ⊕ QUICK ADD  │
+├──────────────────────────────────────────────────┤
+│ RUNNING:                                         │
+│  ┌─ 5K ────┐  ┌─ 10K ───┐  ┌─ HALF MARATHON ─┐  │
+│  │ 22:30   │  │ --:--   │  │ --:--           │  │ ← Large serif values
+│  │ ↓ FASTER│  │         │  │ ~1:42:15        │  │ ← Green side-border for improvements
+│  └─────────┘  └─────────┘  └─────────────────┘  │
+└──────────────────────────────────────────────────┘
 
-TRAINING RECOMMENDATIONS:
-▸ RUN  CONSIDER VARYING TRAINING INTENSITY
-▸ STR  YOUR PUSH-UPS (45) >> PULL-UPS (12). FOCUS PULLING EXERCISES
+⸻ TIME TO RE-TEST YOUR PERSONAL BESTS (28 DAYS PASSED) ×
+                  ↑ Floating banner reminder
+
+INTERACTION FEATURES:
+• Editorial pill buttons for category selection
+• Calendar picker for precise date entry
+• Auto-save prevents data loss during entry
+• Gasp animations on PB updates
+• Responsive design: desktop grid → mobile stack
 ```
 
 **MANIFESTO + MACHINE DUALITY:**

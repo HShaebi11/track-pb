@@ -503,6 +503,12 @@ function render() {
     const profileEl = $('#profile-name');
     if (profileEl) profileEl.textContent = `OPERATOR: ${state.profile.name.toUpperCase()}`;
   }
+  
+  // Render card view
+  renderCardView();
+  
+  // Check 4-week reminder
+  check4WeekReminder();
 }
 
 function checkReminder() {
@@ -585,9 +591,189 @@ function addSlideInAnimation(element) {
   setTimeout(() => element.classList.remove('slide-in'), 150);
 }
 
+// ---------- PB DASHBOARD & VIEW MANAGEMENT ----------
+let currentView = 'card'; // 'card' or 'table'
+
+function switchView(view) {
+  currentView = view;
+  
+  // Update toggle buttons
+  $('#cardViewBtn').classList.toggle('active', view === 'card');
+  $('#tableViewBtn').classList.toggle('active', view === 'table');
+  
+  // Show/hide views
+  $('#pbCardView').style.display = view === 'card' ? 'block' : 'none';
+  $('#pbTableView').style.display = view === 'table' ? 'block' : 'none';
+  
+  addGaspAnimation(view === 'card' ? $('#pbCardView') : $('#pbTableView'));
+}
+
+// View toggle event listeners
+$('#cardViewBtn').addEventListener('click', () => switchView('card'));
+$('#tableViewBtn').addEventListener('click', () => switchView('table'));
+
+// ---------- QUICK ADD MODAL ----------
+function openQuickAdd() {
+  const modal = $('#quickAddModal');
+  modal.style.display = 'flex';
+  
+  // Set today's date for all date inputs
+  $('#quickRunDate').value = todayISO();
+  $('#quickExDate').value = todayISO();
+  $('#quickBodyDate').value = todayISO();
+  
+  addSlideInAnimation(modal.querySelector('.modal-content'));
+}
+
+function closeQuickAdd() {
+  $('#quickAddModal').style.display = 'none';
+}
+
+// Quick Add event listeners
+$('#quickAddBtn').addEventListener('click', openQuickAdd);
+$('#closeQuickAdd').addEventListener('click', closeQuickAdd);
+
+// Close modal when clicking outside
+$('#quickAddModal').addEventListener('click', (e) => {
+  if (e.target.id === 'quickAddModal') {
+    closeQuickAdd();
+  }
+});
+
+// ---------- EDITORIAL PILL BUTTONS ----------
+const pillBtns = $$('.editorial-pill[data-cat]');
+let activeCat = 'running';
+
+function setCat(cat) {
+  activeCat = cat;
+  pillBtns.forEach(b => {
+    b.classList.toggle('active', b.dataset.cat === cat);
+    b.setAttribute('aria-pressed', String(b.dataset.cat === cat));
+    if (b.dataset.cat === cat) {
+      addGaspAnimation(b);
+    }
+  });
+  
+  // Update main form fields
+  $('#fields-running').style.display = cat === 'running' ? 'block' : 'none';
+  $('#fields-strength').style.display = cat === 'strength' ? 'block' : 'none';
+  $('#fields-body').style.display = cat === 'body' ? 'block' : 'none';
+  
+  // Update quick add form fields
+  $('#quick-fields-running').style.display = cat === 'running' ? 'block' : 'none';
+  $('#quick-fields-strength').style.display = cat === 'strength' ? 'block' : 'none';
+  $('#quick-fields-body').style.display = cat === 'body' ? 'block' : 'none';
+}
+
+pillBtns.forEach(b => b.addEventListener('click', () => setCat(b.dataset.cat)));
+
+// ---------- 4-WEEK REMINDER SYSTEM ----------
+function check4WeekReminder() {
+  const lastPBDate = getLastPBDate();
+  const banner = $('#reminderBanner');
+  
+  if (lastPBDate) {
+    const daysSince = (Date.now() - new Date(lastPBDate).getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSince >= 28) {
+      banner.style.display = 'block';
+      addSlideInAnimation(banner);
+    }
+  }
+}
+
+function getLastPBDate() {
+  const pbEntries = state.history.filter(h => h.pb);
+  if (pbEntries.length === 0) return null;
+  
+  return pbEntries[pbEntries.length - 1].dateISO;
+}
+
+$('#dismissReminder').addEventListener('click', () => {
+  $('#reminderBanner').style.display = 'none';
+});
+
+// ---------- CARD VIEW RENDERING ----------
+function renderCardView() {
+  // Running cards
+  const runMap = { '5k': 'card-5k', '10k': 'card-10k', 'hm': 'card-hm', 'marathon': 'card-marathon' };
+  for (const [k, id] of Object.entries(runMap)) {
+    const v = state.running[k];
+    const displayTime = v != null ? toHMS(v) : '--:--';
+    $(`#${id}`).textContent = displayTime;
+    
+    // Show change from previous PB
+    const prev = lastPrevious('running', k);
+    if (prev && v != null) {
+      const delta = v - prev.valueSeconds;
+      const changeEl = $(`#card-change-${k}`);
+      if (delta < 0) {
+        changeEl.textContent = `↓ ${toHMS(Math.abs(delta))} FASTER`;
+        changeEl.className = 'pb-card-change improvement';
+        $(`[data-metric="${k}"]`).classList.add('improved');
+      } else if (delta > 0) {
+        changeEl.textContent = `↑ ${toHMS(delta)} SLOWER`;
+        changeEl.className = 'pb-card-change decline';
+      }
+    }
+  }
+  
+  // Strength cards
+  const sMap = ['pushups', 'pullups', 'dbpress', 'gobletsquat', 'dbrow'];
+  for (const k of sMap) {
+    const v = state.strength[k];
+    let displayText = '-- REPS';
+    if (v != null) {
+      if (k === 'pushups' || k === 'pullups') {
+        displayText = `${v|0} REPS`;
+      } else {
+        displayText = `${v.toFixed(1)} PTS`;
+      }
+    }
+    $(`#card-${k}`).textContent = displayText;
+    
+    // Show change from previous PB
+    const prev = lastPrevious('strength', k);
+    if (prev && v != null) {
+      const delta = v - prev.score;
+      const changeEl = $(`#card-change-${k}`);
+      if (delta > 0) {
+        changeEl.textContent = `↑ +${delta.toFixed(1)}`;
+        changeEl.className = 'pb-card-change improvement';
+        $(`[data-metric="${k}"]`).classList.add('improved');
+      } else if (delta < 0) {
+        changeEl.textContent = `↓ ${delta.toFixed(1)}`;
+        changeEl.className = 'pb-card-change decline';
+      }
+    }
+  }
+  
+  // Body composition cards
+  $(`#card-weight`).textContent = state.body.weight ? `${state.body.weight} KG` : '-- KG';
+  $(`#card-bf`).textContent = state.body.bf ? `${state.body.bf} %` : '-- %';
+  $(`#card-lean`).textContent = state.body.lean ? `${state.body.lean} KG` : '-- KG';
+  
+  // Body changes (28-day trend)
+  const bPrev = lastByDays('body', 28);
+  if (bPrev) {
+    ['weight', 'bf', 'lean'].forEach(metric => {
+      const current = state.body[metric];
+      const previous = bPrev[metric];
+      if (current != null && previous != null) {
+        const delta = current - previous;
+        const changeEl = $(`#card-change-${metric}`);
+        if (Math.abs(delta) > 0.1) {
+          const sign = delta > 0 ? '↑ +' : '↓ ';
+          changeEl.textContent = `${sign}${Math.abs(delta).toFixed(1)} (28D)`;
+          changeEl.className = delta > 0 ? 'pb-card-change improvement' : 'pb-card-change decline';
+        }
+      }
+    });
+  }
+}
+
 // ---------- Form & Save ----------
 const catBtns = $$('.chip[data-cat]');
-let activeCat = 'running';
+// let activeCat = 'running'; // Already defined above
 
 function setCat(cat) {
   activeCat = cat;
@@ -793,6 +979,137 @@ $('#settingsModal').addEventListener('click', (e) => {
     closeSettings();
   }
 });
+
+// ---------- QUICK ADD FORM SUBMISSION ----------
+$('#saveQuickAdd').addEventListener('click', (e) => {
+  e.preventDefault();
+  
+  if (activeCat === 'running') {
+    const dist = $('#quickRunDistance').value;
+    const t = parseHMS($('#quickRunTime').value.trim());
+    const dateISO = $('#quickRunDate').value || todayISO();
+    
+    if (t == null) {
+      alert('Please enter time as hh:mm:ss (or mm:ss).');
+      return;
+    }
+    
+    const current = state.running[dist];
+    const isPB = current == null || t < current;
+    
+    if (isPB) {
+      state.running[dist] = t;
+      state.lastPBCheck = dateISO;
+    }
+    
+    state.history.push({
+      type: 'running',
+      metric: dist,
+      valueSeconds: t,
+      display: toHMS(t),
+      dateISO,
+      pb: isPB
+    });
+    
+  } else if (activeCat === 'strength') {
+    const metric = $('#quickExName').value;
+    const kg = Number($('#quickExWeight').value || 0);
+    const reps = Number($('#quickExReps').value || 0);
+    
+    if (!reps) {
+      alert('Please enter reps.');
+      return;
+    }
+    
+    const score = strengthScoreFromInputs(metric, kg, reps);
+    const dateISO = $('#quickExDate').value || todayISO();
+    const current = state.strength[metric];
+    const isPB = current == null || score > current;
+    
+    if (isPB) {
+      state.strength[metric] = score;
+      state.lastPBCheck = dateISO;
+    }
+    
+    state.history.push({
+      type: 'strength',
+      metric,
+      score,
+      kg: kg,
+      reps: reps,
+      display: strengthDisplayFromScore(metric, score),
+      dateISO,
+      pb: isPB
+    });
+    
+  } else {
+    // body
+    let weight = $('#quickBodyWeight').value ? Number($('#quickBodyWeight').value) : null;
+    let bf = $('#quickBodyBF').value ? Number($('#quickBodyBF').value) : null;
+    let lean = $('#quickBodyLean').value ? Number($('#quickBodyLean').value) : null;
+    const dateISO = $('#quickBodyDate').value || todayISO();
+    
+    if (weight != null && bf != null && lean == null) {
+      lean = Number(((weight * (100 - bf)) / 100).toFixed(1));
+      $('#quickBodyLean').value = String(lean);
+    }
+    
+    if (weight == null && bf == null && lean == null) {
+      alert('Enter at least one body metric.');
+      return;
+    }
+    
+    state.body.weight = weight ?? state.body.weight;
+    state.body.bf = bf ?? state.body.bf;
+    state.body.lean = lean ?? state.body.lean;
+    
+    state.history.push({
+      type: 'body',
+      metric: 'composition',
+      weight,
+      bf,
+      lean,
+      display: [weight != null ? `${weight}kg` : null, bf != null ? `${bf}%` : null, lean != null ? `${lean}kg` : null].filter(Boolean).join(' • '),
+      dateISO,
+      pb: false
+    });
+  }
+  
+  saveState(state);
+  render();
+  closeQuickAdd();
+  
+  // Reset form
+  $('#quickRunTime').value = '';
+  $('#quickExWeight').value = '';
+  $('#quickExReps').value = '';
+  // Keep body fields for quick adjustments
+  
+  // Flash success animation
+  addGaspAnimation($('#pbCardView'));
+});
+
+// Auto-save inputs to localStorage (basic implementation)
+function setupAutoSave() {
+  const inputs = ['quickRunTime', 'quickExWeight', 'quickExReps', 'quickBodyWeight', 'quickBodyBF', 'quickBodyLean'];
+  
+  inputs.forEach(id => {
+    const input = $(`#${id}`);
+    if (input) {
+      // Load saved value
+      const saved = localStorage.getItem(`autosave_${id}`);
+      if (saved) input.value = saved;
+      
+      // Save on change
+      input.addEventListener('input', () => {
+        localStorage.setItem(`autosave_${id}`, input.value);
+      });
+    }
+  });
+}
+
+// Initialize auto-save
+setupAutoSave();
 
 // Initial render
 render();
