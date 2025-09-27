@@ -1,6 +1,8 @@
-# 🏃‍♂️ Hybrid Athlete PB Tracker
+# HYBRID ATHLETE PERFORMANCE LEDGER
 
-A comprehensive personal best tracking application for athletes who train across multiple disciplines - running, strength training, and body composition.
+**EDITORIAL BRUTALISM FOR TRANSPARENT SYSTEMS**
+
+A comprehensive personal best tracking application designed with Antithesis Tools design language - embodying the duality of manifesto + machine for athletes who train across multiple disciplines.
 
 ## ✨ Features
 
@@ -60,32 +62,37 @@ Uses **Epley Formula** for 1RM: `1RM = weight × (1 + reps/30)`
 - Export/import functionality for data backup
 - Privacy-focused - your data never leaves your device
 
-## 🎨 **Technical Features**
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Dark Theme**: Easy on the eyes for any time of day
-- **Accessible**: Proper ARIA labels and keyboard navigation
-- **Fast**: Pure vanilla JavaScript, no dependencies
+## 🎨 **Design Philosophy: Antithesis Tools**
+- **Authentic Typography**: PP Editorial New (Thin) for manifesto headers, PP Neue Montreal Mono (Medium) for system data
+- **Editorial Brutalism**: Manifesto-style headers with precise ledger data
+- **Typography Duality**: Serif for human emotion, mono for system utility
+- **Black/White Precision**: 90% monochrome with functional red/green accents
+- **Gasp Animation System**: Subtle breathing animations on interactions
+- **8px Grid System**: Mathematically precise spacing and alignment
+- **Colon DNA**: All system headers end with ":" for consistency
 
 ## 📊 **Examples in Action**
 
-**Running:**
+**ANTITHESIS DESIGN IN ACTION:**
 ```
-Current 5K PB: 22:30
-├── Estimated 10K: ~46:50
-├── Estimated Half Marathon: ~1:42:15
-├── Predicted 5K (4 weeks): 📈 22:10
-└── Recommendation: "Consider varying training intensity - mix tempo runs with easy runs"
+┌─ RUNNING MODULE ─────────────────────────────────┐
+│ DISTANCE     │ CURRENT PB │ DELTA    │ ESTIMATE │
+├──────────────┼────────────┼──────────┼──────────┤
+│ 5K           │ 22:30      │ ↓ 0:15   │ ~BASE    │
+│ 10K          │ --:--      │ —        │ ~46:50   │
+│ HALF MARA... │ --:--      │ —        │ ~1:42:15 │
+└──────────────┴────────────┴──────────┴──────────┘
+
+TRAINING RECOMMENDATIONS:
+▸ RUN  CONSIDER VARYING TRAINING INTENSITY
+▸ STR  YOUR PUSH-UPS (45) >> PULL-UPS (12). FOCUS PULLING EXERCISES
 ```
 
-**Strength:**
-```
-DB Floor Press: 24kg × 8 reps (192 pts)
-├── Est. 1RM: 30kg | 24kg × 8
-├── Predicted Score (4 weeks): 📈 198 pts
-└── Push-ups: 45 reps
-    ├── Next: Diamond Push-ups
-    └── Balance: "Your push-ups (45) are much stronger than pull-ups (12). Focus more on pulling exercises."
-```
+**MANIFESTO + MACHINE DUALITY:**
+- **Expressive Headers**: "HYBRID ATHLETE:" in editorial serif
+- **Precise Data**: All metrics in monospace ledger format  
+- **System Commands**: "SAVE DATA", "CONFIG", "CLEAR ALL"
+- **Transparent Logic**: All calculations and estimations visible
 
 ## 📱 **File Structure**
 ```

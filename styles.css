@@ -1,11 +1,65 @@
 /* ANTITHESIS TOOLS DESIGN LANGUAGE */
 /* Editorial Brutalism for Transparent Systems */
 
-/* 01. TYPOGRAPHY SYSTEM */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+/* 01. TYPOGRAPHY SYSTEM - AUTHENTIC ANTITHESIS TOOLS FONTS */
 
-/* Using web-safe alternatives for PP Editorial New and PP Neue Montreal Mono */
+/* PP Editorial New - For manifesto/editorial elements */
+@font-face {
+  font-family: 'PPEditorialNew';
+  src: url('./fonts/PPEditorialNew-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PPEditorialNew';
+  src: url('./fonts/PPEditorialNew-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PPEditorialNew';
+  src: url('./fonts/PPEditorialNew-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PPEditorialNew';
+  src: url('./fonts/PPEditorialNew-Heavy.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* PP Neue Montreal Mono - For system/utility elements */
+@font-face {
+  font-family: 'PPNeueMontrealMono';
+  src: url('./fonts/PPNeueMontrealMono-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PPNeueMontrealMono';
+  src: url('./fonts/PPNeueMontrealMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PPNeueMontrealMono';
+  src: url('./fonts/PPNeueMontrealMono-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PPNeueMontrealMono';
+  src: url('./fonts/PPNeueMontrealMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
 :root {
   /* CORE PALETTE */
   --black: #000000;
@@ -14,9 +68,9 @@
   --error: #E63946;
   --success: #2ECC71;
   
-  /* TYPOGRAPHY */
-  --font-editorial: 'Crimson Text', serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* TYPOGRAPHY - AUTHENTIC ANTITHESIS TOOLS */
+  --font-editorial: 'PPEditorialNew', serif;
+  --font-mono: 'PPNeueMontrealMono', monospace;
   
   /* GRID SYSTEM */
   --unit: 8px;
@@ -34,11 +88,12 @@
 html, body {
   height: 100%;
   font-family: var(--font-mono);
+  font-weight: 500; /* PP Neue Montreal Mono Medium as base */
   background: var(--white);
   color: var(--black);
   line-height: 1.2;
   font-size: 14px;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.03em; /* +30 tracking as per spec */
 }
 
 /* 03. LAYOUT SYSTEM */
@@ -48,12 +103,12 @@ html, body {
   padding: var(--margin);
 }
 
-/* MANIFESTO HEADERS */
+/* MANIFESTO HEADERS - PP Editorial New Thin for big headings */
 .manifesto {
   font-family: var(--font-editorial);
-  font-weight: 700;
+  font-weight: 100; /* Using Thin weight for dramatic effect */
   font-size: clamp(48px, 6vw, 96px);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.04em; /* -20 to -40 tracking as per spec */
   line-height: 0.9;
   text-transform: uppercase;
   margin-bottom: calc(var(--unit) * 6);
@@ -66,9 +121,9 @@ html, body {
 /* SYSTEM HEADERS */
 .system-header {
   font-family: var(--font-mono);
-  font-weight: 600;
+  font-weight: 500; /* PP Neue Montreal Mono Medium */
   font-size: 16px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.05em; /* +50 tracking for system headers */
   text-transform: uppercase;
   margin-bottom: calc(var(--unit) * 2);
   border-bottom: 1px solid var(--grey-grid);
@@ -112,9 +167,9 @@ html, body {
 
 .module-header {
   font-family: var(--font-editorial);
-  font-weight: 700;
+  font-weight: 100; /* PP Editorial New Thin for module headers */
   font-size: 32px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.02em; /* Tight tracking */
   margin-bottom: calc(var(--unit) * 3);
   text-transform: uppercase;
   display: flex;
@@ -140,16 +195,17 @@ html, body {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-mono);
+  font-weight: 500; /* PP Neue Montreal Mono Medium for ledger precision */
   font-size: 14px;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.03em; /* +30 tracking for data readability */
   margin-bottom: calc(var(--unit) * 4);
 }
 
 .ledger th {
   text-align: left;
-  font-weight: 600;
+  font-weight: 700; /* PP Neue Montreal Mono Bold for headers */
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.05em; /* +50 tracking for header emphasis */
   padding: calc(var(--unit) * 2);
   border-bottom: 1px solid var(--black);
   background: var(--white);
@@ -374,9 +430,9 @@ html, body {
 
 .header-title {
   font-family: var(--font-editorial);
-  font-weight: 700;
+  font-weight: 100; /* PP Editorial New Thin for commanding presence */
   font-size: clamp(32px, 4vw, 64px);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.03em; /* Tight tracking for editorial feel */
   line-height: 0.9;
   text-transform: uppercase;
 }
@@ -511,7 +567,7 @@ html, body {
 
 .modal-title {
   font-family: var(--font-editorial);
-  font-weight: 700;
+  font-weight: 100; /* PP Editorial New Thin for consistency */
   font-size: 24px;
   text-transform: uppercase;
   letter-spacing: -0.02em;

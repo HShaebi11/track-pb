@@ -289,18 +289,35 @@ function setDelta(id, delta, betterIsLower = false) {
   const el = $(`#delta-${id}`);
   if (delta == null) {
     el.textContent = '—';
-    el.className = 'delta';
+    el.className = 'metric-delta';
     return;
   }
-  const sign = delta > 0 ? '+' : '';
-  el.textContent = betterIsLower
-    ? (delta < 0 ? `${toHMS(Math.abs(delta))} faster` : delta > 0 ? `${toHMS(delta)} slower` : '—')
-    : (delta !== 0 ? `${sign}${delta.toFixed(1)}` : '—');
-  el.className = 'delta ' + (
-    betterIsLower
-      ? (delta < 0 ? 'up' : delta > 0 ? 'down' : '')
-      : (delta > 0 ? 'up' : delta < 0 ? 'down' : '')
-  );
+  
+  let deltaText = '—';
+  let deltaClass = 'metric-delta';
+  
+  if (betterIsLower) {
+    // Running times - lower is better
+    if (delta < 0) {
+      deltaText = `↓ ${toHMS(Math.abs(delta))}`;
+      deltaClass = 'metric-delta delta-up';
+    } else if (delta > 0) {
+      deltaText = `↑ ${toHMS(delta)}`;
+      deltaClass = 'metric-delta delta-down';
+    }
+  } else {
+    // Strength/body - higher is usually better
+    if (delta > 0) {
+      deltaText = `↑ ${delta.toFixed(1)}`;
+      deltaClass = 'metric-delta delta-up';
+    } else if (delta < 0) {
+      deltaText = `↓ ${Math.abs(delta).toFixed(1)}`;
+      deltaClass = 'metric-delta delta-down';
+    }
+  }
+  
+  el.textContent = deltaText;
+  el.className = deltaClass;
 }
 
 function renderEstimations(type, metric, currentValue) {
@@ -371,22 +388,32 @@ function renderRecommendations() {
   const recommendations = generateTrainingRecommendations();
   const container = $('#recommendations');
   if (container && recommendations.length > 0) {
-    container.innerHTML = recommendations.map(rec => 
+    const header = container.querySelector('.system-header');
+    let content = recommendations.map(rec => 
       `<div class="recommendation ${rec.priority}">
-        <span class="rec-icon">${rec.type === 'running' ? '🏃' : '🏋️'}</span>
-        <span class="rec-message">${rec.message}</span>
+        <span class="recommendation-icon">${rec.type === 'running' ? 'RUN' : 'STR'}</span>
+        <span>${rec.message.toUpperCase()}</span>
       </div>`
     ).join('');
+    
+    if (header) {
+      container.innerHTML = `<div class="system-header">TRAINING RECOMMENDATIONS</div>${content}`;
+    } else {
+      container.innerHTML = content;
+    }
     container.style.display = 'block';
+    addSlideInAnimation(container);
   }
 }
 
 function render() {
-  // Running
+  // Running - Antithesis Table Format
   const runMap = { '5k': 'pb-5k', '10k': 'pb-10k', 'hm': 'pb-hm', 'marathon': 'pb-marathon' };
   for (const k of Object.keys(runMap)) {
     const v = state.running[k];
-    $(`#${runMap[k]}`).textContent = v != null ? toHMS(v) : '--';
+    const displayTime = v != null ? toHMS(v) : '--:--';
+    $(`#${runMap[k]}`).textContent = displayTime;
+    
     // delta vs previous same metric from history
     const prev = lastPrevious('running', k);
     const delta = prev ? v - prev.valueSeconds : null;
@@ -403,11 +430,20 @@ function render() {
     }
   }
 
-  // Strength (score logic for weighted)
+  // Strength - Antithesis Table Format
   const sMap = ['pushups', 'pullups', 'dbpress', 'gobletsquat', 'dbrow'];
   for (const k of sMap) {
     const v = state.strength[k];
-    $(`#pb-${k}`).textContent = v != null ? strengthDisplayFromScore(k, v) : '--';
+    let displayText = '-- REPS';
+    if (v != null) {
+      if (k === 'pushups' || k === 'pullups') {
+        displayText = `${v|0} REPS`;
+      } else {
+        displayText = `${v.toFixed(1)} PTS`;
+      }
+    }
+    $(`#pb-${k}`).textContent = displayText;
+    
     const prev = lastPrevious('strength', k);
     const delta = prev ? v - prev.score : null;
     setDelta(k, delta, false);
@@ -439,30 +475,33 @@ function render() {
     setDelta('lean', null);
   }
 
-  // History
+  // History - Antithesis Table Format
   const tbody = $('#historyTable tbody');
   tbody.innerHTML = '';
   for (const row of [...state.history].reverse().slice(0, 50)) {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${fmtDate(row.dateISO)}</td>
-                    <td>${row.type} • ${row.metric}</td>
-                    <td class="right">${row.display}${row.pb ? ' <span class="badge" style="color:var(--acc);border-color:rgba(110,231,183,.3)">PB</span>' : ''}</td>`;
+    tr.innerHTML = `<td class="metric-name">${fmtDate(row.dateISO)}</td>
+                    <td class="metric-name">${row.type.toUpperCase()} // ${row.metric.toUpperCase()}</td>
+                    <td class="metric-value text-right">${row.display}${row.pb ? ' PB' : ''}</td>`;
     tbody.appendChild(tr);
+    if (row.pb) {
+      addSlideInAnimation(tr);
+    }
   }
 
-  // Reminder & last check
+  // Reminder & last check - Antithesis Format
   if (state.lastPBCheck) {
-    $('#last-check').textContent = 'Last PB check: ' + fmtDate(state.lastPBCheck);
+    $('#last-check').textContent = `LAST CHECK: ${fmtDate(state.lastPBCheck)}`;
   }
   checkReminder();
   
   // Render recommendations
   renderRecommendations();
   
-  // Update profile display
+  // Update profile display - Antithesis Format
   if (state.profile.name) {
     const profileEl = $('#profile-name');
-    if (profileEl) profileEl.textContent = `Welcome back, ${state.profile.name}!`;
+    if (profileEl) profileEl.textContent = `OPERATOR: ${state.profile.name.toUpperCase()}`;
   }
 }
 
@@ -530,13 +569,34 @@ function strengthDisplayFromScore(metric, score) {
   return `${score.toFixed(1)} pts`;
 }
 
+// ---------- ANTITHESIS GASP ANIMATION SYSTEM ----------
+function addGaspAnimation(element) {
+  element.classList.add('gasp');
+  setTimeout(() => element.classList.remove('gasp'), 200);
+}
+
+function addPulseAnimation(element) {
+  element.classList.add('pulse');
+  setTimeout(() => element.classList.remove('pulse'), 300);
+}
+
+function addSlideInAnimation(element) {
+  element.classList.add('slide-in');
+  setTimeout(() => element.classList.remove('slide-in'), 150);
+}
+
 // ---------- Form & Save ----------
-const catBtns = $$('.chipbtn[data-cat]');
+const catBtns = $$('.chip[data-cat]');
 let activeCat = 'running';
 
 function setCat(cat) {
   activeCat = cat;
-  catBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
+  catBtns.forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.cat === cat));
+    if (b.dataset.cat === cat) {
+      addGaspAnimation(b);
+    }
+  });
   $('#fields-running').style.display = cat === 'running' ? 'block' : 'none';
   $('#fields-strength').style.display = cat === 'strength' ? 'block' : 'none';
   $('#fields-body').style.display = cat === 'body' ? 'block' : 'none';
@@ -636,8 +696,10 @@ $('#pb-form').addEventListener('submit', (e) => {
 
 function flash(sel) {
   const el = $(sel);
-  el.classList.add('highlight');
-  setTimeout(() => el.classList.remove('highlight'), 900);
+  addGaspAnimation(el);
+  // Add pulse to any updated values in the module
+  const values = el.querySelectorAll('.metric-value');
+  values.forEach(val => addPulseAnimation(val));
 }
 
 $('#clearAll').addEventListener('click', () => {
