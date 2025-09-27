@@ -12,14 +12,20 @@
       <div>
         <h1>Hybrid Athlete PB Tracker</h1>
         <div class="sub">Daily logs if you like; focus PB re-test every 4 weeks.</div>
+        <div id="profile-name" class="profile-welcome"></div>
       </div>
-      <div class="badge" id="last-check">Last PB check: —</div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button id="settingsBtn" class="chipbtn" title="Settings & Profile">⚙️</button>
+        <div class="badge" id="last-check">Last PB check: —</div>
+      </div>
     </header>
 
     <div id="reminder" class="reminder" role="status" aria-live="polite" style="display:none;">
       <div>⏱️</div>
-      <div><strong>4-week check:</strong> It’s time to re-test key PBs. Log a timed 5K, max push-ups, etc.</div>
+      <div><strong>4-week check:</strong> It's time to re-test key PBs. Log a timed 5K, max push-ups, etc.</div>
     </div>
+
+    <div id="recommendations" class="recommendations" style="display:none;"></div>
 
     <section class="grid" style="margin-top:16px;">
       <!-- Running PBs -->
@@ -33,6 +39,8 @@
             <div>
               <div class="label">5K</div>
               <div class="value" id="pb-5k">--</div>
+              <div class="estimate" id="estimate-5k" style="display:none;"></div>
+              <div class="prediction" id="pred-5k" style="display:none;"></div>
             </div>
             <span class="delta" id="delta-5k">—</span>
           </div>
@@ -40,6 +48,8 @@
             <div>
               <div class="label">10K</div>
               <div class="value" id="pb-10k">--</div>
+              <div class="estimate" id="estimate-10k" style="display:none;"></div>
+              <div class="prediction" id="pred-10k" style="display:none;"></div>
             </div>
             <span class="delta" id="delta-10k">—</span>
           </div>
@@ -47,6 +57,8 @@
             <div>
               <div class="label">Half Marathon</div>
               <div class="value" id="pb-hm">--</div>
+              <div class="estimate" id="estimate-hm" style="display:none;"></div>
+              <div class="prediction" id="pred-hm" style="display:none;"></div>
             </div>
             <span class="delta" id="delta-hm">—</span>
           </div>
@@ -54,6 +66,8 @@
             <div>
               <div class="label">Marathon</div>
               <div class="value" id="pb-marathon">--</div>
+              <div class="estimate" id="estimate-marathon" style="display:none;"></div>
+              <div class="prediction" id="pred-marathon" style="display:none;"></div>
             </div>
             <span class="delta" id="delta-marathon">—</span>
           </div>
@@ -227,6 +241,88 @@
         </table>
       </div>
     </section>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>⚙️ Settings & Profile</h2>
+        <button id="closeSettings" class="close-btn">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <h3>👤 Profile</h3>
+          <div class="form-group">
+            <label for="profileName">Name</label>
+            <input id="profileName" type="text" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label for="profileAge">Age</label>
+            <input id="profileAge" type="number" placeholder="25">
+          </div>
+          <div class="form-group">
+            <label for="profileExperience">Experience Level</label>
+            <select id="profileExperience">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="primaryGoal">Primary Goal</label>
+            <select id="primaryGoal">
+              <option value="general">General Fitness</option>
+              <option value="endurance">Endurance</option>
+              <option value="strength">Strength</option>
+              <option value="weight_loss">Weight Loss</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>🎯 Preferences</h3>
+          <div class="form-group">
+            <label>
+              <input id="showEstimations" type="checkbox" checked>
+              Show race time estimations
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+              <input id="showPredictions" type="checkbox" checked>
+              Show performance predictions
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="unitsSelect">Units</label>
+            <select id="unitsSelect">
+              <option value="metric">Metric (kg, km)</option>
+              <option value="imperial">Imperial (lbs, miles)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>🎯 Goals</h3>
+          <div class="form-group">
+            <label for="goal5k">5K Goal Time</label>
+            <input id="goal5k" type="text" placeholder="25:00">
+          </div>
+          <div class="form-group">
+            <label for="goalPushups">Push-ups Goal</label>
+            <input id="goalPushups" type="number" placeholder="50">
+          </div>
+          <div class="form-group">
+            <label for="goalWeight">Weight Goal (kg)</label>
+            <input id="goalWeight" type="number" step="0.1" placeholder="75.0">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveSettings" class="btn-primary">Save Settings</button>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>

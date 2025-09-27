@@ -34,8 +34,87 @@ function todayISO() {
   return new Date(d - tzOffset).toISOString().slice(0, 10);
 }
 
+// ---------- Estimation & Prediction Algorithms ----------
+const VDOT_TABLE = {
+  // Simplified VDOT equivalency table (time in seconds for different distances)
+  // Based on Jack Daniels' Running Formula
+  getEquivalentTime: function(knownDistance, knownTime, targetDistance) {
+    // Riegel's formula: T2 = T1 * (D2/D1)^1.06
+    const distanceMap = { '5k': 5, '10k': 10, 'hm': 21.1, 'marathon': 42.2 };
+    const d1 = distanceMap[knownDistance];
+    const d2 = distanceMap[targetDistance];
+    if (!d1 || !d2) return null;
+    
+    return Math.round(knownTime * Math.pow(d2 / d1, 1.06));
+  }
+};
+
+function predictFuturePerformance(type, metric, daysAhead = 28) {
+  // Simple linear regression based on recent performance trends
+  const recentEntries = state.history
+    .filter(h => h.type === type && h.metric === metric && h.pb)
+    .slice(-5) // Last 5 PBs
+    .map(h => ({
+      date: new Date(h.dateISO).getTime(),
+      value: type === 'running' ? h.valueSeconds : h.score
+    }));
+
+  if (recentEntries.length < 2) return null;
+
+  // Calculate trend (simple linear regression)
+  const n = recentEntries.length;
+  const sumX = recentEntries.reduce((sum, entry) => sum + entry.date, 0);
+  const sumY = recentEntries.reduce((sum, entry) => sum + entry.value, 0);
+  const sumXY = recentEntries.reduce((sum, entry) => sum + entry.date * entry.value, 0);
+  const sumX2 = recentEntries.reduce((sum, entry) => sum + entry.date * entry.date, 0);
+
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+
+  const futureDate = Date.now() + (daysAhead * 24 * 60 * 60 * 1000);
+  const prediction = slope * futureDate + intercept;
+
+  return Math.max(0, prediction);
+}
+
+function generateTrainingRecommendations() {
+  const recommendations = [];
+  
+  // Analyze running performance
+  const runningPBs = Object.entries(state.running).filter(([k, v]) => v !== null);
+  if (runningPBs.length > 0) {
+    const recentRuns = state.history.filter(h => h.type === 'running').slice(-10);
+    const pbRate = recentRuns.filter(h => h.pb).length / recentRuns.length;
+    
+    if (pbRate < 0.1) {
+      recommendations.push({
+        type: 'running',
+        priority: 'high',
+        message: 'Consider varying your training intensity - mix tempo runs with easy runs'
+      });
+    }
+  }
+
+  // Analyze strength trends
+  const strengthPBs = Object.entries(state.strength).filter(([k, v]) => v !== null);
+  if (strengthPBs.length > 0) {
+    const recentStrength = state.history.filter(h => h.type === 'strength').slice(-10);
+    const strengthPBRate = recentStrength.filter(h => h.pb).length / recentStrength.length;
+    
+    if (strengthPBRate < 0.1) {
+      recommendations.push({
+        type: 'strength',
+        priority: 'medium',
+        message: 'Try progressive overload - gradually increase weight or reps each week'
+      });
+    }
+  }
+
+  return recommendations;
+}
+
 // ---------- Storage Model ----------
-const KEY = 'pbTracker_v1';
+const KEY = 'pbTracker_v2'; // Updated version for new features
 const defaultState = {
   lastPBCheck: null,
   running: { '5k': null, '10k': null, 'hm': null, 'marathon': null }, // seconds (lower better)
@@ -47,7 +126,27 @@ const defaultState = {
     dbrow: null // score = kg*reps
   },
   body: { weight: null, bf: null, lean: null }, // latest values
-  history: [] // entries: {type, metric, value, display, dateISO, pb:boolean}
+  history: [], // entries: {type, metric, value, display, dateISO, pb:boolean}
+  
+  // New personalization features
+  profile: {
+    name: '',
+    age: null,
+    experience: 'beginner', // beginner, intermediate, advanced
+    primaryGoal: 'general', // general, endurance, strength, weight_loss
+    trainingDays: 3
+  },
+  goals: {
+    running: {},
+    strength: {},
+    body: {}
+  },
+  preferences: {
+    units: 'metric', // metric, imperial
+    theme: 'dark',
+    showEstimations: true,
+    showPredictions: true
+  }
 };
 
 function loadState() {
@@ -83,6 +182,51 @@ function setDelta(id, delta, betterIsLower = false) {
   );
 }
 
+function renderEstimations(type, metric, currentValue) {
+  if (type === 'running') {
+    // Show estimated times for other distances
+    const distances = ['5k', '10k', 'hm', 'marathon'];
+    distances.forEach(dist => {
+      if (dist !== metric) {
+        const estimated = VDOT_TABLE.getEquivalentTime(metric, currentValue, dist);
+        if (estimated) {
+          const estimateEl = $(`#estimate-${dist}`);
+          if (estimateEl) {
+            estimateEl.textContent = `~${toHMS(estimated)}`;
+            estimateEl.style.display = 'block';
+          }
+        }
+      }
+    });
+  }
+}
+
+function renderPrediction(type, metric) {
+  const prediction = predictFuturePerformance(type, metric, 28);
+  if (prediction) {
+    const predEl = $(`#pred-${metric}`);
+    if (predEl) {
+      const displayValue = type === 'running' ? toHMS(prediction) : prediction.toFixed(1);
+      predEl.textContent = `📈 ${displayValue}`;
+      predEl.style.display = 'block';
+    }
+  }
+}
+
+function renderRecommendations() {
+  const recommendations = generateTrainingRecommendations();
+  const container = $('#recommendations');
+  if (container && recommendations.length > 0) {
+    container.innerHTML = recommendations.map(rec => 
+      `<div class="recommendation ${rec.priority}">
+        <span class="rec-icon">${rec.type === 'running' ? '🏃' : '🏋️'}</span>
+        <span class="rec-message">${rec.message}</span>
+      </div>`
+    ).join('');
+    container.style.display = 'block';
+  }
+}
+
 function render() {
   // Running
   const runMap = { '5k': 'pb-5k', '10k': 'pb-10k', 'hm': 'pb-hm', 'marathon': 'pb-marathon' };
@@ -93,6 +237,16 @@ function render() {
     const prev = lastPrevious('running', k);
     const delta = prev ? v - prev.valueSeconds : null;
     setDelta(k === 'hm' ? 'hm' : (k === 'marathon' ? 'marathon' : k), delta, true);
+    
+    // Add estimations if enabled
+    if (state.preferences.showEstimations && v != null) {
+      renderEstimations('running', k, v);
+    }
+    
+    // Add predictions if enabled
+    if (state.preferences.showPredictions) {
+      renderPrediction('running', k);
+    }
   }
 
   // Strength (score logic for weighted)
@@ -137,6 +291,15 @@ function render() {
     $('#last-check').textContent = 'Last PB check: ' + fmtDate(state.lastPBCheck);
   }
   checkReminder();
+  
+  // Render recommendations
+  renderRecommendations();
+  
+  // Update profile display
+  if (state.profile.name) {
+    const profileEl = $('#profile-name');
+    if (profileEl) profileEl.textContent = `Welcome back, ${state.profile.name}!`;
+  }
 }
 
 function checkReminder() {
@@ -324,6 +487,84 @@ $('#clearAll').addEventListener('click', () => {
 $('#runDate').value = todayISO();
 $('#exDate').value = todayISO();
 $('#bodyDate').value = todayISO();
+
+// ---------- Settings & Personalization ----------
+function openSettings() {
+  const modal = $('#settingsModal');
+  modal.style.display = 'flex';
+  
+  // Populate current values
+  $('#profileName').value = state.profile.name || '';
+  $('#profileAge').value = state.profile.age || '';
+  $('#profileExperience').value = state.profile.experience;
+  $('#primaryGoal').value = state.profile.primaryGoal;
+  $('#showEstimations').checked = state.preferences.showEstimations;
+  $('#showPredictions').checked = state.preferences.showPredictions;
+  $('#unitsSelect').value = state.preferences.units;
+  
+  // Populate goals
+  if (state.goals.running['5k']) {
+    $('#goal5k').value = toHMS(state.goals.running['5k']);
+  }
+  if (state.goals.strength.pushups) {
+    $('#goalPushups').value = state.goals.strength.pushups;
+  }
+  if (state.goals.body.weight) {
+    $('#goalWeight').value = state.goals.body.weight;
+  }
+}
+
+function closeSettings() {
+  $('#settingsModal').style.display = 'none';
+}
+
+function saveSettings() {
+  // Update profile
+  state.profile.name = $('#profileName').value.trim();
+  state.profile.age = $('#profileAge').value ? Number($('#profileAge').value) : null;
+  state.profile.experience = $('#profileExperience').value;
+  state.profile.primaryGoal = $('#primaryGoal').value;
+  
+  // Update preferences
+  state.preferences.showEstimations = $('#showEstimations').checked;
+  state.preferences.showPredictions = $('#showPredictions').checked;
+  state.preferences.units = $('#unitsSelect').value;
+  
+  // Update goals
+  const goal5k = $('#goal5k').value.trim();
+  if (goal5k) {
+    const goalSeconds = parseHMS(goal5k);
+    if (goalSeconds) {
+      state.goals.running['5k'] = goalSeconds;
+    }
+  }
+  
+  const goalPushups = $('#goalPushups').value;
+  if (goalPushups) {
+    state.goals.strength.pushups = Number(goalPushups);
+  }
+  
+  const goalWeight = $('#goalWeight').value;
+  if (goalWeight) {
+    state.goals.body.weight = Number(goalWeight);
+  }
+  
+  saveState(state);
+  render();
+  closeSettings();
+}
+
+// Event listeners for settings
+$('#settingsBtn').addEventListener('click', openSettings);
+$('#closeSettings').addEventListener('click', closeSettings);
+$('#saveSettings').addEventListener('click', saveSettings);
+
+// Close modal when clicking outside
+$('#settingsModal').addEventListener('click', (e) => {
+  if (e.target.id === 'settingsModal') {
+    closeSettings();
+  }
+});
 
 // Initial render
 render();

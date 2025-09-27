@@ -287,3 +287,156 @@ th {
   height: 1px;
   overflow: hidden;
 }
+
+/* New Features Styles */
+.profile-welcome {
+  font-size: 12px;
+  color: var(--acc);
+  margin-top: 4px;
+}
+
+.estimate {
+  font-size: 10px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.prediction {
+  font-size: 10px;
+  color: var(--acc);
+  font-weight: 600;
+}
+
+.recommendations {
+  margin: 16px 0;
+  padding: 12px;
+  background: var(--chip);
+  border: 1px solid var(--outline);
+  border-radius: 12px;
+}
+
+.recommendation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  margin: 4px 0;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.recommendation.high {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 3px solid var(--danger);
+}
+
+.recommendation.medium {
+  background: rgba(251, 191, 36, 0.1);
+  border-left: 3px solid var(--warn);
+}
+
+.recommendation.low {
+  background: rgba(110, 231, 183, 0.1);
+  border-left: 3px solid var(--acc);
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--panel);
+  border: 1px solid var(--outline);
+  border-radius: 14px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--outline);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: var(--text);
+  background: var(--chip);
+  border-radius: 50%;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--outline);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.settings-section {
+  margin-bottom: 24px;
+}
+
+.settings-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--acc);
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.form-group input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--acc), #4ade80);
+  color: var(--bg);
+  border: none;
+  font-weight: 700;
+}
