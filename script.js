@@ -1,6 +1,8 @@
-// ---------- Utilities ----------
+/* ===== HYBRID ATHLETE PERFORMANCE LEDGER - OPTIMIZED ===== */
+
+// ---------- CORE UTILITIES ----------
 const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => [...document.querySelectorAll(sel)];
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 const fmtDate = (d) => new Date(d).toLocaleDateString();
 const pad = (n) => String(n).padStart(2, '0');
 

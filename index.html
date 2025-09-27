@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HYBRID ATHLETE PERFORMANCE LEDGER</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <!-- MANIFESTO HEADER -->
+  <div class="app">
+    <!-- HEADER -->
     <header class="header">
-      <div>
-        <h1 class="header-title">HYBRID ATHLETE</h1>
-        <div class="header-subtitle">PERFORMANCE TRACKING SYSTEM</div>
-        <div id="profile-name" class="header-subtitle"></div>
-      </div>
-      <div class="header-controls">
-        <button id="settingsBtn" class="btn-secondary" title="SYSTEM CONFIGURATION">CONFIG</button>
-        <div class="header-badge" id="last-check">LAST CHECK: —</div>
+      <div class="header-content">
+        <div class="manifesto">
+          <div class="header-title">HYBRID ATHLETE</div>
+          <div class="header-subtitle">PERFORMANCE TRACKING SYSTEM</div>
+          <div id="profile-name" class="header-subtitle"></div>
+        </div>
+        <div class="header-controls">
+          <button id="settingsBtn" class="btn-secondary">CONFIG</button>
+          <div class="header-badge" id="last-check">LAST CHECK: —</div>
+        </div>
       </div>
     </header>
 
-    <!-- SYSTEM ALERTS -->
+    <!-- ALERTS & RECOMMENDATIONS -->
     <div id="reminder" class="alert alert-error" style="display:none;">
       <div class="alert-header">4-WEEK RETEST REQUIRED:</div>
       <div class="alert-content">EXECUTE COMPREHENSIVE PB VALIDATION PROTOCOL</div>
     </div>
 
-    <!-- 4-WEEK REMINDER FLOATING BANNER -->
     <div id="reminderBanner" class="reminder-banner" style="display:none;">
       <div class="reminder-content">
         <span class="reminder-prefix">⸻</span>
@@ -40,7 +41,7 @@
       <div class="system-header">TRAINING RECOMMENDATIONS</div>
     </div>
 
-    <!-- PB DASHBOARD CONTROLS -->
+    <!-- DASHBOARD CONTROLS -->
     <div class="dashboard-controls">
       <div class="view-toggle">
         <button id="cardViewBtn" class="chip active" data-view="card">CARD VIEW</button>
@@ -49,15 +50,14 @@
       <button id="quickAddBtn" class="btn-add">⊕ QUICK ADD</button>
     </div>
 
-    <!-- PRIMARY LEDGER GRID -->
-    <section class="grid">
-      
-      <!-- PB DASHBOARD - CARD VIEW -->
-      <div id="pbCardView" class="pb-dashboard col-12">
+    <!-- MAIN CONTENT GRID -->
+    <main class="main-grid">
+      <!-- PB DASHBOARD -->
+      <section id="pbCardView" class="pb-dashboard">
         <div class="pb-cards-grid">
-          <!-- RUNNING CARDS -->
+          <!-- RUNNING SECTION -->
           <div class="pb-section">
-            <h3 class="pb-section-title">RUNNING:</h3>
+            <h2 class="pb-section-title">RUNNING:</h2>
             <div class="pb-cards">
               <div class="pb-card" data-metric="5k">
                 <div class="pb-card-metric">5K</div>
@@ -82,9 +82,9 @@
             </div>
           </div>
 
-          <!-- STRENGTH CARDS -->
+          <!-- STRENGTH SECTION -->
           <div class="pb-section">
-            <h3 class="pb-section-title">STRENGTH:</h3>
+            <h2 class="pb-section-title">STRENGTH:</h2>
             <div class="pb-cards">
               <div class="pb-card" data-metric="pushups">
                 <div class="pb-card-metric">PUSH-UPS</div>
@@ -114,9 +114,9 @@
             </div>
           </div>
 
-          <!-- BODY COMPOSITION CARDS -->
+          <!-- BODY COMPOSITION SECTION -->
           <div class="pb-section">
-            <h3 class="pb-section-title">BODY COMPOSITION:</h3>
+            <h2 class="pb-section-title">BODY COMPOSITION:</h2>
             <div class="pb-cards">
               <div class="pb-card" data-metric="weight">
                 <div class="pb-card-metric">WEIGHT</div>
@@ -136,162 +136,124 @@
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- PB DASHBOARD - TABLE VIEW -->
-      <div id="pbTableView" class="module col-12" style="display:none;">
+      <!-- TABLE VIEW -->
+      <section id="pbTableView" class="pb-table-view" style="display:none;">
         <div class="module-header">
           <span>PERSONAL BESTS</span>
           <span class="module-badge">COMPREHENSIVE LOG</span>
         </div>
         
-        <table class="ledger">
-          <thead>
-            <tr>
-              <th>DISTANCE</th>
-              <th class="text-right">CURRENT PB</th>
-              <th class="text-right">DELTA</th>
-              <th class="text-right">ESTIMATE</th>
-              <th class="text-right">PREDICT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="metric-name">5K</td>
-              <td class="metric-value" id="pb-5k">--:--</td>
-              <td class="metric-delta" id="delta-5k">—</td>
-              <td class="metric-estimate" id="estimate-5k" style="display:none;">~--:--</td>
-              <td class="metric-prediction" id="pred-5k" style="display:none;">📈 --:--</td>
-            </tr>
-            <tr>
-              <td class="metric-name">10K</td>
-              <td class="metric-value" id="pb-10k">--:--</td>
-              <td class="metric-delta" id="delta-10k">—</td>
-              <td class="metric-estimate" id="estimate-10k" style="display:none;">~--:--</td>
-              <td class="metric-prediction" id="pred-10k" style="display:none;">📈 --:--</td>
-            </tr>
-            <tr>
-              <td class="metric-name">HALF MARATHON</td>
-              <td class="metric-value" id="pb-hm">--:--</td>
-              <td class="metric-delta" id="delta-hm">—</td>
-              <td class="metric-estimate" id="estimate-hm" style="display:none;">~--:--</td>
-              <td class="metric-prediction" id="pred-hm" style="display:none;">📈 --:--</td>
-            </tr>
-            <tr>
-              <td class="metric-name">MARATHON</td>
-              <td class="metric-value" id="pb-marathon">--:--</td>
-              <td class="metric-delta" id="delta-marathon">—</td>
-              <td class="metric-estimate" id="estimate-marathon" style="display:none;">~--:--</td>
-              <td class="metric-prediction" id="pred-marathon" style="display:none;">📈 --:--</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- STRENGTH PERFORMANCE MODULE -->
-      <div class="module col-6">
-        <div class="module-header">
-          <span>STRENGTH</span>
-          <span class="module-badge">SCORE INCREASING</span>
+        <div class="table-container">
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th>DISTANCE</th>
+                <th class="text-right">CURRENT PB</th>
+                <th class="text-right">DELTA</th>
+                <th class="text-right">ESTIMATE</th>
+                <th class="text-right">PREDICT</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="metric-name">5K</td>
+                <td class="metric-value" id="pb-5k">--:--</td>
+                <td class="metric-delta" id="delta-5k">—</td>
+                <td class="metric-estimate" id="estimate-5k" style="display:none;">~--:--</td>
+                <td class="metric-prediction" id="pred-5k" style="display:none;">📈 --:--</td>
+              </tr>
+              <tr>
+                <td class="metric-name">10K</td>
+                <td class="metric-value" id="pb-10k">--:--</td>
+                <td class="metric-delta" id="delta-10k">—</td>
+                <td class="metric-estimate" id="estimate-10k" style="display:none;">~--:--</td>
+                <td class="metric-prediction" id="pred-10k" style="display:none;">📈 --:--</td>
+              </tr>
+              <tr>
+                <td class="metric-name">HALF MARATHON</td>
+                <td class="metric-value" id="pb-hm">--:--</td>
+                <td class="metric-delta" id="delta-hm">—</td>
+                <td class="metric-estimate" id="estimate-hm" style="display:none;">~--:--</td>
+                <td class="metric-prediction" id="pred-hm" style="display:none;">📈 --:--</td>
+              </tr>
+              <tr>
+                <td class="metric-name">MARATHON</td>
+                <td class="metric-value" id="pb-marathon">--:--</td>
+                <td class="metric-delta" id="delta-marathon">—</td>
+                <td class="metric-estimate" id="estimate-marathon" style="display:none;">~--:--</td>
+                <td class="metric-prediction" id="pred-marathon" style="display:none;">📈 --:--</td>
+              </tr>
+              <tr>
+                <td class="metric-name">PUSH-UPS</td>
+                <td class="metric-value" id="pb-pushups">-- REPS</td>
+                <td class="metric-delta" id="delta-pushups">—</td>
+                <td class="metric-estimate" id="estimate-pushups" style="display:none;">NEXT: --</td>
+                <td class="metric-prediction" id="pred-pushups" style="display:none;">📈 -- REPS</td>
+              </tr>
+              <tr>
+                <td class="metric-name">PULL-UPS</td>
+                <td class="metric-value" id="pb-pullups">-- REPS</td>
+                <td class="metric-delta" id="delta-pullups">—</td>
+                <td class="metric-estimate" id="estimate-pullups" style="display:none;">NEXT: --</td>
+                <td class="metric-prediction" id="pred-pullups" style="display:none;">📈 -- REPS</td>
+              </tr>
+              <tr>
+                <td class="metric-name">DB FLOOR PRESS</td>
+                <td class="metric-value" id="pb-dbpress">-- PTS</td>
+                <td class="metric-delta" id="delta-dbpress">—</td>
+                <td class="metric-estimate" id="estimate-dbpress" style="display:none;">1RM: --KG</td>
+                <td class="metric-prediction" id="pred-dbpress" style="display:none;">📈 -- PTS</td>
+              </tr>
+              <tr>
+                <td class="metric-name">GOBLET SQUAT</td>
+                <td class="metric-value" id="pb-gobletsquat">-- PTS</td>
+                <td class="metric-delta" id="delta-gobletsquat">—</td>
+                <td class="metric-estimate" id="estimate-gobletsquat" style="display:none;">1RM: --KG</td>
+                <td class="metric-prediction" id="pred-gobletsquat" style="display:none;">📈 -- PTS</td>
+              </tr>
+              <tr>
+                <td class="metric-name">DB ROW</td>
+                <td class="metric-value" id="pb-dbrow">-- PTS</td>
+                <td class="metric-delta" id="delta-dbrow">—</td>
+                <td class="metric-estimate" id="estimate-dbrow" style="display:none;">1RM: --KG</td>
+                <td class="metric-prediction" id="pred-dbrow" style="display:none;">📈 -- PTS</td>
+              </tr>
+              <tr>
+                <td class="metric-name">WEIGHT</td>
+                <td class="metric-value" id="pb-weight">--</td>
+                <td class="metric-delta" id="delta-weight">—</td>
+                <td class="metric-estimate" id="estimate-weight" style="display:none;">TARGET: --</td>
+                <td class="metric-prediction" id="pred-weight" style="display:none;">📈 -- KG</td>
+              </tr>
+              <tr>
+                <td class="metric-name">BODY FAT</td>
+                <td class="metric-value" id="pb-bf">--</td>
+                <td class="metric-delta" id="delta-bf">—</td>
+                <td class="metric-estimate" id="estimate-bf" style="display:none;">TARGET: --</td>
+                <td class="metric-prediction" id="pred-bf" style="display:none;">📈 -- %</td>
+              </tr>
+              <tr>
+                <td class="metric-name">LEAN MASS</td>
+                <td class="metric-value" id="pb-lean">--</td>
+                <td class="metric-delta" id="delta-lean">—</td>
+                <td class="metric-estimate" id="estimate-lean" style="display:none;">TARGET: --</td>
+                <td class="metric-prediction" id="pred-lean" style="display:none;">📈 -- KG</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        
-        <table class="ledger">
-          <thead>
-            <tr>
-              <th>EXERCISE</th>
-              <th class="text-right">CURRENT PB</th>
-              <th class="text-right">DELTA</th>
-              <th class="text-right">ESTIMATE</th>
-              <th class="text-right">PREDICT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="metric-name">PUSH-UPS</td>
-              <td class="metric-value" id="pb-pushups">-- REPS</td>
-              <td class="metric-delta" id="delta-pushups">—</td>
-              <td class="metric-estimate" id="estimate-pushups" style="display:none;">NEXT: --</td>
-              <td class="metric-prediction" id="pred-pushups" style="display:none;">📈 -- REPS</td>
-            </tr>
-            <tr>
-              <td class="metric-name">PULL-UPS</td>
-              <td class="metric-value" id="pb-pullups">-- REPS</td>
-              <td class="metric-delta" id="delta-pullups">—</td>
-              <td class="metric-estimate" id="estimate-pullups" style="display:none;">NEXT: --</td>
-              <td class="metric-prediction" id="pred-pullups" style="display:none;">📈 -- REPS</td>
-            </tr>
-            <tr>
-              <td class="metric-name">DB FLOOR PRESS</td>
-              <td class="metric-value" id="pb-dbpress">-- PTS</td>
-              <td class="metric-delta" id="delta-dbpress">—</td>
-              <td class="metric-estimate" id="estimate-dbpress" style="display:none;">1RM: --KG</td>
-              <td class="metric-prediction" id="pred-dbpress" style="display:none;">📈 -- PTS</td>
-            </tr>
-            <tr>
-              <td class="metric-name">GOBLET SQUAT</td>
-              <td class="metric-value" id="pb-gobletsquat">-- PTS</td>
-              <td class="metric-delta" id="delta-gobletsquat">—</td>
-              <td class="metric-estimate" id="estimate-gobletsquat" style="display:none;">1RM: --KG</td>
-              <td class="metric-prediction" id="pred-gobletsquat" style="display:none;">📈 -- PTS</td>
-            </tr>
-            <tr>
-              <td class="metric-name">DB ROW</td>
-              <td class="metric-value" id="pb-dbrow">-- PTS</td>
-              <td class="metric-delta" id="delta-dbrow">—</td>
-              <td class="metric-estimate" id="estimate-dbrow" style="display:none;">1RM: --KG</td>
-              <td class="metric-prediction" id="pred-dbrow" style="display:none;">📈 -- PTS</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      </section>
 
-      <!-- BODY COMPOSITION MODULE -->
-      <div class="module col-12">
-        <div class="module-header">
-          <span>BODY COMPOSITION</span>
-          <span class="module-badge">28-DAY TREND ANALYSIS</span>
-        </div>
-        
-        <table class="ledger">
-          <thead>
-            <tr>
-              <th>METRIC</th>
-              <th class="text-right">CURRENT</th>
-              <th class="text-right">28-DAY DELTA</th>
-              <th class="text-right">UNIT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="metric-name">WEIGHT</td>
-              <td class="metric-value" id="pb-weight">--</td>
-              <td class="metric-delta" id="delta-weight">—</td>
-              <td class="metric-name">KG</td>
-            </tr>
-            <tr>
-              <td class="metric-name">BODY FAT</td>
-              <td class="metric-value" id="pb-bf">--</td>
-              <td class="metric-delta" id="delta-bf">—</td>
-              <td class="metric-name">%</td>
-            </tr>
-            <tr>
-              <td class="metric-name">LEAN MASS</td>
-              <td class="metric-value" id="pb-lean">--</td>
-              <td class="metric-delta" id="delta-lean">—</td>
-              <td class="metric-name">KG</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- DATA INPUT MODULE -->
-      <div class="module col-8">
+      <!-- INPUT FORM -->
+      <section class="input-section">
         <div class="module-header">
           <span>DATA INPUT</span>
           <span class="module-badge">SAVE DAILY // PB AUTO-UPDATE</span>
         </div>
 
-        <!-- CATEGORY SELECTION - EDITORIAL PILL BUTTONS -->
+        <!-- CATEGORY SELECTION -->
         <div class="editorial-pills">
           <button class="editorial-pill active" data-cat="running" aria-pressed="true">RUNNING</button>
           <button class="editorial-pill" data-cat="strength" aria-pressed="false">STRENGTH</button>
@@ -339,18 +301,14 @@
               </select>
             </div>
             
-            <div class="grid">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-label" for="exWeight">WEIGHT (KG, OPTIONAL)</label>
-                  <input id="exWeight" class="form-input" type="number" step="0.5" placeholder="24" />
-                </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="exWeight">WEIGHT (KG, OPTIONAL)</label>
+                <input id="exWeight" class="form-input" type="number" step="0.5" placeholder="24" />
               </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-label" for="exReps">REPS</label>
-                  <input id="exReps" class="form-input" type="number" step="1" placeholder="12" />
-                </div>
+              <div class="form-group">
+                <label class="form-label" for="exReps">REPS</label>
+                <input id="exReps" class="form-input" type="number" step="1" placeholder="12" />
               </div>
             </div>
             
@@ -364,24 +322,18 @@
           <div id="fields-body" class="form-section" style="display:none">
             <div class="form-section-header">BODY COMPOSITION PROTOCOL</div>
             
-            <div class="grid">
-              <div class="col-4">
-                <div class="form-group">
-                  <label class="form-label" for="bodyWeight">WEIGHT (KG)</label>
-                  <input id="bodyWeight" class="form-input" type="number" step="0.1" placeholder="80.2" />
-                </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="bodyWeight">WEIGHT (KG)</label>
+                <input id="bodyWeight" class="form-input" type="number" step="0.1" placeholder="80.2" />
               </div>
-              <div class="col-4">
-                <div class="form-group">
-                  <label class="form-label" for="bodyBF">BODY FAT (%)</label>
-                  <input id="bodyBF" class="form-input" type="number" step="0.1" placeholder="18.5" />
-                </div>
+              <div class="form-group">
+                <label class="form-label" for="bodyBF">BODY FAT (%)</label>
+                <input id="bodyBF" class="form-input" type="number" step="0.1" placeholder="18.5" />
               </div>
-              <div class="col-4">
-                <div class="form-group">
-                  <label class="form-label" for="bodyLean">LEAN MASS (KG)</label>
-                  <input id="bodyLean" class="form-input" type="number" step="0.1" placeholder="AUTO CALC" />
-                </div>
+              <div class="form-group">
+                <label class="form-label" for="bodyLean">LEAN MASS (KG)</label>
+                <input id="bodyLean" class="form-input" type="number" step="0.1" placeholder="AUTO CALC" />
               </div>
             </div>
             
@@ -393,30 +345,32 @@
 
           <button id="saveBtn" type="submit" class="btn">SAVE DATA</button>
         </form>
-      </div>
+      </section>
 
-      <!-- HISTORY LEDGER -->
-      <div class="module col-4">
+      <!-- HISTORY -->
+      <section class="history-section">
         <div class="module-header">
           <span>HISTORY</span>
           <button id="clearAll" class="btn-danger">CLEAR ALL</button>
         </div>
         
-        <table id="historyTable" class="ledger">
-          <thead>
-            <tr>
-              <th>DATE</th>
-              <th>METRIC</th>
-              <th class="text-right">VALUE</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+        <div class="table-container">
+          <table id="historyTable" class="ledger">
+            <thead>
+              <tr>
+                <th>DATE</th>
+                <th>METRIC</th>
+                <th class="text-right">VALUE</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <!-- SYSTEM CONFIGURATION MODAL -->
+  <!-- SETTINGS MODAL -->
   <div id="settingsModal" class="modal" style="display:none;">
     <div class="modal-content">
       <div class="modal-header">
@@ -433,18 +387,19 @@
             <input id="profileName" class="form-input" type="text" placeholder="ATHLETE NAME">
           </div>
           
-          <div class="form-group">
-            <label class="form-label" for="profileAge">AGE</label>
-            <input id="profileAge" class="form-input" type="number" placeholder="25">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="profileExperience">EXPERIENCE LEVEL</label>
-            <select id="profileExperience" class="form-select">
-              <option value="beginner">BEGINNER</option>
-              <option value="intermediate">INTERMEDIATE</option>
-              <option value="advanced">ADVANCED</option>
-            </select>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="profileAge">AGE</label>
+              <input id="profileAge" class="form-input" type="number" placeholder="25">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="profileExperience">EXPERIENCE LEVEL</label>
+              <select id="profileExperience" class="form-select">
+                <option value="beginner">BEGINNER</option>
+                <option value="intermediate">INTERMEDIATE</option>
+                <option value="advanced">ADVANCED</option>
+              </select>
+            </div>
           </div>
           
           <div class="form-group">
@@ -461,18 +416,19 @@
         <div class="form-section mb-4">
           <div class="form-section-header">SYSTEM PREFERENCES</div>
           
-          <div class="form-group">
-            <label class="form-label">
-              <input id="showEstimations" type="checkbox" checked>
-              SHOW RACE TIME ESTIMATIONS
-            </label>
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label">
-              <input id="showPredictions" type="checkbox" checked>
-              SHOW PERFORMANCE PREDICTIONS
-            </label>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">
+                <input id="showEstimations" type="checkbox" checked>
+                SHOW RACE TIME ESTIMATIONS
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <input id="showPredictions" type="checkbox" checked>
+                SHOW PERFORMANCE PREDICTIONS
+              </label>
+            </div>
           </div>
           
           <div class="form-group">
@@ -487,19 +443,19 @@
         <div class="form-section">
           <div class="form-section-header">TARGET GOALS</div>
           
-          <div class="form-group">
-            <label class="form-label" for="goal5k">5K TARGET TIME</label>
-            <input id="goal5k" class="form-input" type="text" placeholder="25:00">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="goalPushups">PUSH-UPS TARGET</label>
-            <input id="goalPushups" class="form-input" type="number" placeholder="50">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="goalWeight">WEIGHT TARGET (KG)</label>
-            <input id="goalWeight" class="form-input" type="number" step="0.1" placeholder="75.0">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="goal5k">5K TARGET TIME</label>
+              <input id="goal5k" class="form-input" type="text" placeholder="25:00">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="goalPushups">PUSH-UPS TARGET</label>
+              <input id="goalPushups" class="form-input" type="number" placeholder="50">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="goalWeight">WEIGHT TARGET (KG)</label>
+              <input id="goalWeight" class="form-input" type="number" step="0.1" placeholder="75.0">
+            </div>
           </div>
         </div>
       </div>
@@ -519,7 +475,6 @@
       </div>
       
       <div class="modal-body">
-        <!-- CATEGORY SELECTION -->
         <div class="editorial-pills mb-4">
           <button class="editorial-pill active" data-cat="running" aria-pressed="true">RUNNING</button>
           <button class="editorial-pill" data-cat="strength" aria-pressed="false">STRENGTH</button>
@@ -563,18 +518,14 @@
               </select>
             </div>
             
-            <div class="grid">
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-label" for="quickExWeight">WEIGHT (KG)</label>
-                  <input id="quickExWeight" class="form-input" type="number" step="0.5" placeholder="24" />
-                </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="quickExWeight">WEIGHT (KG)</label>
+                <input id="quickExWeight" class="form-input" type="number" step="0.5" placeholder="24" />
               </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label class="form-label" for="quickExReps">REPS</label>
-                  <input id="quickExReps" class="form-input" type="number" step="1" placeholder="12" />
-                </div>
+              <div class="form-group">
+                <label class="form-label" for="quickExReps">REPS</label>
+                <input id="quickExReps" class="form-input" type="number" step="1" placeholder="12" />
               </div>
             </div>
             
@@ -586,24 +537,18 @@
 
           <!-- BODY INPUT -->
           <div id="quick-fields-body" class="form-section" style="display:none">
-            <div class="grid">
-              <div class="col-4">
-                <div class="form-group">
-                  <label class="form-label" for="quickBodyWeight">WEIGHT (KG)</label>
-                  <input id="quickBodyWeight" class="form-input" type="number" step="0.1" placeholder="80.2" />
-                </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="quickBodyWeight">WEIGHT (KG)</label>
+                <input id="quickBodyWeight" class="form-input" type="number" step="0.1" placeholder="80.2" />
               </div>
-              <div class="col-4">
-                <div class="form-group">
-                  <label class="form-label" for="quickBodyBF">BODY FAT (%)</label>
-                  <input id="quickBodyBF" class="form-input" type="number" step="0.1" placeholder="18.5" />
-                </div>
+              <div class="form-group">
+                <label class="form-label" for="quickBodyBF">BODY FAT (%)</label>
+                <input id="quickBodyBF" class="form-input" type="number" step="0.1" placeholder="18.5" />
               </div>
-              <div class="col-4">
-                <div class="form-group">
-                  <label class="form-label" for="quickBodyLean">LEAN MASS (KG)</label>
-                  <input id="quickBodyLean" class="form-input" type="number" step="0.1" placeholder="AUTO CALC" />
-                </div>
+              <div class="form-group">
+                <label class="form-label" for="quickBodyLean">LEAN MASS (KG)</label>
+                <input id="quickBodyLean" class="form-input" type="number" step="0.1" placeholder="AUTO CALC" />
               </div>
             </div>
             
