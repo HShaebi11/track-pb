@@ -49,6 +49,94 @@ const VDOT_TABLE = {
   }
 };
 
+const STRENGTH_ESTIMATIONS = {
+  // Strength exercise relationships and estimations
+  // Based on common strength training ratios and research
+  
+  // Estimate 1RM from reps (Epley formula: 1RM = weight * (1 + reps/30))
+  estimate1RM: function(weight, reps) {
+    if (reps === 1) return weight;
+    return Math.round(weight * (1 + reps / 30));
+  },
+  
+  // Estimate reps at percentage of 1RM
+  estimateRepsAtWeight: function(oneRM, targetWeight) {
+    if (targetWeight >= oneRM) return 1;
+    const percentage = targetWeight / oneRM;
+    // Approximate reps based on percentage of 1RM
+    if (percentage >= 0.95) return 1;
+    if (percentage >= 0.90) return 3;
+    if (percentage >= 0.85) return 5;
+    if (percentage >= 0.80) return 8;
+    if (percentage >= 0.75) return 10;
+    if (percentage >= 0.70) return 12;
+    if (percentage >= 0.65) return 15;
+    return 20;
+  },
+  
+  // Bodyweight exercise progressions
+  getBodyweightProgression: function(exercise, currentReps) {
+    const progressions = {
+      pushups: [
+        { name: 'Standard Push-ups', range: [1, 50] },
+        { name: 'Diamond Push-ups', range: [1, 30] },
+        { name: 'One-arm Push-ups', range: [1, 10] }
+      ],
+      pullups: [
+        { name: 'Assisted Pull-ups', range: [1, 15] },
+        { name: 'Standard Pull-ups', range: [1, 25] },
+        { name: 'Weighted Pull-ups', range: [1, 15] }
+      ]
+    };
+    
+    const exerciseProgressions = progressions[exercise];
+    if (!exerciseProgressions) return null;
+    
+    for (let i = 0; i < exerciseProgressions.length; i++) {
+      const prog = exerciseProgressions[i];
+      if (currentReps >= prog.range[0] && currentReps <= prog.range[1]) {
+        const nextProg = exerciseProgressions[i + 1];
+        if (nextProg) {
+          return {
+            current: prog.name,
+            next: nextProg.name,
+            suggestion: `Ready for ${nextProg.name}? Try ${Math.ceil(nextProg.range[0])} reps.`
+          };
+        }
+      }
+    }
+    return null;
+  },
+  
+  // Strength ratios for balanced development
+  getStrengthRatios: function(currentScores) {
+    const ratios = {
+      // Typical strength ratios (as percentages of each other)
+      pushToPull: 1.0, // Push-ups to Pull-ups should be roughly equal
+      upperToLower: 0.8 // Upper body to lower body ratio
+    };
+    
+    const suggestions = [];
+    
+    if (currentScores.pushups && currentScores.pullups) {
+      const ratio = currentScores.pushups / currentScores.pullups;
+      if (ratio > 1.5) {
+        suggestions.push({
+          type: 'balance',
+          message: `Your push-ups (${currentScores.pushups}) are much stronger than pull-ups (${currentScores.pullups}). Focus more on pulling exercises.`
+        });
+      } else if (ratio < 0.7) {
+        suggestions.push({
+          type: 'balance',
+          message: `Your pull-ups (${currentScores.pullups}) are much stronger than push-ups (${currentScores.pushups}). Add more pushing exercises.`
+        });
+      }
+    }
+    
+    return suggestions;
+  }
+};
+
 function predictFuturePerformance(type, metric, daysAhead = 28) {
   // Simple linear regression based on recent performance trends
   const recentEntries = state.history
@@ -95,7 +183,7 @@ function generateTrainingRecommendations() {
     }
   }
 
-  // Analyze strength trends
+  // Analyze strength trends and balance
   const strengthPBs = Object.entries(state.strength).filter(([k, v]) => v !== null);
   if (strengthPBs.length > 0) {
     const recentStrength = state.history.filter(h => h.type === 'strength').slice(-10);
@@ -107,6 +195,39 @@ function generateTrainingRecommendations() {
         priority: 'medium',
         message: 'Try progressive overload - gradually increase weight or reps each week'
       });
+    }
+    
+    // Check for strength imbalances
+    const balanceIssues = STRENGTH_ESTIMATIONS.getStrengthRatios(state.strength);
+    balanceIssues.forEach(issue => {
+      recommendations.push({
+        type: 'strength',
+        priority: 'medium',
+        message: issue.message
+      });
+    });
+    
+    // Bodyweight exercise progression recommendations
+    if (state.strength.pushups) {
+      const progression = STRENGTH_ESTIMATIONS.getBodyweightProgression('pushups', state.strength.pushups);
+      if (progression) {
+        recommendations.push({
+          type: 'strength',
+          priority: 'low',
+          message: progression.suggestion
+        });
+      }
+    }
+    
+    if (state.strength.pullups) {
+      const progression = STRENGTH_ESTIMATIONS.getBodyweightProgression('pullups', state.strength.pullups);
+      if (progression) {
+        recommendations.push({
+          type: 'strength',
+          priority: 'low',
+          message: progression.suggestion
+        });
+      }
     }
   }
 
@@ -198,6 +319,39 @@ function renderEstimations(type, metric, currentValue) {
         }
       }
     });
+  } else if (type === 'strength') {
+    // Show strength-specific estimations
+    const estimateEl = $(`#estimate-${metric}`);
+    if (!estimateEl) return;
+    
+    let estimationText = '';
+    
+    if (metric === 'pushups' || metric === 'pullups') {
+      // Bodyweight exercises - show progression suggestions
+      const progression = STRENGTH_ESTIMATIONS.getBodyweightProgression(metric, currentValue);
+      if (progression) {
+        estimationText = `Next: ${progression.next}`;
+      }
+    } else {
+      // Weighted exercises - show 1RM estimation
+      const lastEntry = state.history
+        .filter(h => h.type === 'strength' && h.metric === metric && h.pb)
+        .slice(-1)[0];
+      
+      if (lastEntry && lastEntry.kg && lastEntry.reps) {
+        const estimated1RM = STRENGTH_ESTIMATIONS.estimate1RM(lastEntry.kg, lastEntry.reps);
+        estimationText = `Est. 1RM: ${estimated1RM}kg`;
+        
+        // Also show reps at different weights
+        const repsAt80 = STRENGTH_ESTIMATIONS.estimateRepsAtWeight(estimated1RM, Math.round(estimated1RM * 0.8));
+        estimationText += ` | ${Math.round(estimated1RM * 0.8)}kg × ${repsAt80}`;
+      }
+    }
+    
+    if (estimationText) {
+      estimateEl.textContent = estimationText;
+      estimateEl.style.display = 'block';
+    }
   }
 }
 
@@ -257,6 +411,16 @@ function render() {
     const prev = lastPrevious('strength', k);
     const delta = prev ? v - prev.score : null;
     setDelta(k, delta, false);
+    
+    // Add estimations if enabled
+    if (state.preferences.showEstimations && v != null) {
+      renderEstimations('strength', k, v);
+    }
+    
+    // Add predictions if enabled
+    if (state.preferences.showPredictions) {
+      renderPrediction('strength', k);
+    }
   }
 
   // Body (trend in 4 weeks)
@@ -422,14 +586,16 @@ $('#pb-form').addEventListener('submit', (e) => {
       state.lastPBCheck = dateISO;
       flash('#card-strength');
     }
-    state.history.push({
-      type: 'strength',
-      metric,
-      score,
-      display: strengthDisplayFromScore(metric, score),
-      dateISO,
-      pb: isPB
-    });
+        state.history.push({
+          type: 'strength',
+          metric,
+          score,
+          kg: kg, // Store weight for 1RM calculations
+          reps: reps, // Store reps for 1RM calculations
+          display: strengthDisplayFromScore(metric, score),
+          dateISO,
+          pb: isPB
+        });
   } else {
     // body
     let weight = $('#bodyWeight').value ? Number($('#bodyWeight').value) : null;
