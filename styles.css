@@ -1,0 +1,289 @@
+/* CSS Variables */
+:root {
+  --bg: #0f1115;
+  --panel: #151922;
+  --muted: #8b93a7;
+  --text: #e9ecf1;
+  --acc: #6ee7b7;
+  --warn: #fbbf24;
+  --danger: #ef4444;
+  --outline: #232735;
+  --card: #0f131b;
+  --chip: #1e2431;
+  --good: #22c55e;
+  --bad: #ef4444;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 800px at 20% -10%, #1b2233 0%, #0f1115 45%) no-repeat, var(--bg);
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* Layout */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: clamp(22px, 3vw, 34px);
+  margin: 0;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+
+/* Cards */
+.card {
+  background: linear-gradient(180deg, var(--panel), var(--card));
+  border: 1px solid var(--outline);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .25);
+}
+
+.card h2 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  letter-spacing: .4px;
+}
+
+.card .kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* KPI Components */
+.kpi {
+  background: var(--chip);
+  border: 1px solid var(--outline);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.kpi .label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.kpi .value {
+  font-weight: 700;
+}
+
+.delta {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--outline);
+  background: #131827;
+  color: var(--muted);
+}
+
+.delta.up {
+  color: var(--good);
+  border-color: rgba(34, 197, 94, .35);
+}
+
+.delta.down {
+  color: var(--bad);
+  border-color: rgba(239, 68, 68, .35);
+}
+
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #111827;
+  border: 1px solid var(--outline);
+  color: var(--muted);
+}
+
+.highlight {
+  outline: 2px solid var(--acc);
+  box-shadow: 0 0 0 6px rgba(110, 231, 183, 0.12);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 6px 0 12px 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Grid Layout Classes */
+.col-12 {
+  grid-column: span 12;
+}
+
+.col-8 {
+  grid-column: span 8;
+}
+
+.col-6 {
+  grid-column: span 6;
+}
+
+.col-4 {
+  grid-column: span 4;
+}
+
+.col-3 {
+  grid-column: span 3;
+}
+
+/* Responsive Layout */
+@media (max-width: 900px) {
+  .col-8 {
+    grid-column: span 12;
+  }
+  .col-6 {
+    grid-column: span 12;
+  }
+  .col-4 {
+    grid-column: span 12;
+  }
+  .col-3 {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 600px) {
+  .col-3 {
+    grid-column: span 12;
+  }
+}
+
+/* Forms */
+form {
+  display: grid;
+  gap: 10px;
+}
+
+label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+input, select, button, .chipbtn {
+  background: #0e1422;
+  border: 1px solid var(--outline);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+input::placeholder {
+  color: #65708a;
+}
+
+button {
+  cursor: pointer;
+  background: linear-gradient(180deg, #1a2a3f, #0e1422);
+  border: 1px solid #2b384f;
+  font-weight: 700;
+  transition: transform .05s ease, box-shadow .2s ease;
+}
+
+button:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chipbtn {
+  cursor: pointer;
+}
+
+.chipbtn[aria-pressed="true"] {
+  outline: 2px solid var(--acc);
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--outline);
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.right {
+  text-align: right;
+}
+
+/* Reminder */
+.reminder {
+  border: 1px dashed #345;
+  background: #101826;
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

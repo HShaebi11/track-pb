@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hybrid Athlete PB Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Hybrid Athlete PB Tracker</h1>
+        <div class="sub">Daily logs if you like; focus PB re-test every 4 weeks.</div>
+      </div>
+      <div class="badge" id="last-check">Last PB check: —</div>
+    </header>
+
+    <div id="reminder" class="reminder" role="status" aria-live="polite" style="display:none;">
+      <div>⏱️</div>
+      <div><strong>4-week check:</strong> It’s time to re-test key PBs. Log a timed 5K, max push-ups, etc.</div>
+    </div>
+
+    <section class="grid" style="margin-top:16px;">
+      <!-- Running PBs -->
+      <div class="card col-6" id="card-running">
+        <div class="section-title">
+          <h2>🏃 Running PBs</h2>
+          <span class="badge">Lower is better</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi">
+            <div>
+              <div class="label">5K</div>
+              <div class="value" id="pb-5k">--</div>
+            </div>
+            <span class="delta" id="delta-5k">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">10K</div>
+              <div class="value" id="pb-10k">--</div>
+            </div>
+            <span class="delta" id="delta-10k">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Half Marathon</div>
+              <div class="value" id="pb-hm">--</div>
+            </div>
+            <span class="delta" id="delta-hm">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Marathon</div>
+              <div class="value" id="pb-marathon">--</div>
+            </div>
+            <span class="delta" id="delta-marathon">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strength PBs -->
+      <div class="card col-6" id="card-strength">
+        <div class="section-title">
+          <h2>🏋️ Strength PBs</h2>
+          <span class="badge">Higher is better</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi">
+            <div>
+              <div class="label">Push-Ups (max)</div>
+              <div class="value" id="pb-pushups">--</div>
+            </div>
+            <span class="delta" id="delta-pushups">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Pull-Ups (max)</div>
+              <div class="value" id="pb-pullups">--</div>
+            </div>
+            <span class="delta" id="delta-pullups">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">DB Floor Press (kg × reps)</div>
+              <div class="value" id="pb-dbpress">--</div>
+            </div>
+            <span class="delta" id="delta-dbpress">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Goblet Squat (kg × reps)</div>
+              <div class="value" id="pb-gobletsquat">--</div>
+            </div>
+            <span class="delta" id="delta-gobletsquat">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">DB Row (kg × reps)</div>
+              <div class="value" id="pb-dbrow">--</div>
+            </div>
+            <span class="delta" id="delta-dbrow">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body Comp -->
+      <div class="card col-12" id="card-body">
+        <div class="section-title">
+          <h2>🧬 Body Composition</h2>
+          <span class="badge">Trends every 4 weeks</span>
+        </div>
+        <div class="kpis" style="grid-template-columns: repeat(3, minmax(0,1fr));">
+          <div class="kpi">
+            <div>
+              <div class="label">Weight (kg)</div>
+              <div class="value" id="pb-weight">--</div>
+            </div>
+            <span class="delta" id="delta-weight">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Body Fat (%)</div>
+              <div class="value" id="pb-bf">--</div>
+            </div>
+            <span class="delta" id="delta-bf">—</span>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Lean Mass (kg)</div>
+              <div class="value" id="pb-lean">--</div>
+            </div>
+            <span class="delta" id="delta-lean">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Form -->
+      <div class="card col-8">
+        <div class="section-title">
+          <h2>➕ Update</h2>
+          <span class="muted">Save daily; PBs update automatically.</span>
+        </div>
+        <form id="pb-form">
+          <div class="chips" role="tablist" aria-label="Category">
+            <button class="chipbtn" type="button" data-cat="running" aria-pressed="true">Running</button>
+            <button class="chipbtn" type="button" data-cat="strength" aria-pressed="false">Strength</button>
+            <button class="chipbtn" type="button" data-cat="body" aria-pressed="false">Body</button>
+          </div>
+
+          <div id="fields-running">
+            <label for="runDistance">Distance</label>
+            <select id="runDistance">
+              <option value="5k">5K</option>
+              <option value="10k">10K</option>
+              <option value="hm">Half Marathon</option>
+              <option value="marathon">Marathon</option>
+            </select>
+            <label for="runTime">Time (hh:mm:ss)</label>
+            <input id="runTime" placeholder="00:25:30" />
+            <label for="runDate">Date</label>
+            <input type="date" id="runDate" />
+          </div>
+
+          <div id="fields-strength" style="display:none">
+            <label for="exName">Exercise</label>
+            <select id="exName">
+              <option value="pushups">Push-Ups (reps)</option>
+              <option value="pullups">Pull-Ups (reps)</option>
+              <option value="dbpress">DB Floor Press (kg × reps)</option>
+              <option value="gobletsquat">Goblet Squat (kg × reps)</option>
+              <option value="dbrow">DB Row (kg × reps)</option>
+            </select>
+            <div class="grid" style="grid-template-columns: repeat(12,1fr); gap:10px;">
+              <div style="grid-column: span 6;">
+                <label for="exWeight">Weight (kg, optional)</label>
+                <input id="exWeight" type="number" step="0.5" placeholder="e.g., 24" />
+              </div>
+              <div style="grid-column: span 6;">
+                <label for="exReps">Reps</label>
+                <input id="exReps" type="number" step="1" placeholder="e.g., 12" />
+              </div>
+            </div>
+            <label for="exDate">Date</label>
+            <input type="date" id="exDate" />
+          </div>
+
+          <div id="fields-body" style="display:none">
+            <div class="grid" style="grid-template-columns: repeat(12,1fr); gap:10px;">
+              <div style="grid-column: span 4;">
+                <label for="bodyWeight">Weight (kg)</label>
+                <input id="bodyWeight" type="number" step="0.1" placeholder="e.g., 80.2" />
+              </div>
+              <div style="grid-column: span 4;">
+                <label for="bodyBF">Body Fat (%)</label>
+                <input id="bodyBF" type="number" step="0.1" placeholder="e.g., 18.5" />
+              </div>
+              <div style="grid-column: span 4;">
+                <label for="bodyLean">Lean Mass (kg)</label>
+                <input id="bodyLean" type="number" step="0.1" placeholder="auto if Weight & BF%" />
+              </div>
+            </div>
+            <label for="bodyDate">Date</label>
+            <input type="date" id="bodyDate" />
+          </div>
+
+          <button id="saveBtn" type="submit">Save</button>
+        </form>
+      </div>
+
+      <!-- History -->
+      <div class="card col-4">
+        <div class="section-title">
+          <h2>📜 History</h2>
+          <button id="clearAll" class="chipbtn" title="Clear all data">Clear</button>
+        </div>
+        <table id="historyTable" aria-label="History table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Metric</th>
+              <th class="right">Value</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
